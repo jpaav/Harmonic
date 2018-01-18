@@ -131,7 +131,8 @@ int main(int argc, char **argv) {
 	canMat->addTexture(*canDiffuse->getIdPtr());
 	PhysicsObject* can = vp->addPhysicsObject("canMat");
 	can->setObjectData("C:/Users/jpaavola/Documents/Code/Harmonic/src/objs/can/tinCan.obj");
-	can->setLocation(0, 10, 0);
+	can->setLocation(0, 0, 0);
+	can->isPinned = true;
 	//End Test Can//
 
 	//Ground plane//

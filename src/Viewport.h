@@ -13,6 +13,7 @@
 #include "Camera.h"
 #include "Material.h"
 #include "Object.h"
+#include "PhysicsObject.h"
 #include "Texture.h"
 #include <vector>
 //For loading shaders

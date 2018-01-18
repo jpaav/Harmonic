@@ -16,20 +16,19 @@
 #include <vector>
 
 class Object {
-private:
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec2> uvs;
-	std::vector<glm::vec3> normals;
+protected:
 	Material *m_mat;
 	GLuint vertexBuffer;
 	GLuint uvBuffer;
 	int triCount;
 	Camera *m_cam;
 	//GLuint simpleShader;
-protected:
 	Transform transform;
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec2> uvs;
+	std::vector<glm::vec3> normals;
 public:
-	void draw();
+	virtual void draw();
 	void drawEdges();
 	Object() {}
 	Object(Camera* camera, Material* material);

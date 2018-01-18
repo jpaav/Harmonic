@@ -11,7 +11,10 @@
 #include "Object.h"
 #include "Transform.h"
 #include "glm/glm.hpp"
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
+#include <vector>
 
 class PhysicsObject: public Object {
 public:
@@ -22,8 +25,10 @@ public:
 	void update(double deltaT, std::vector<glm::vec3> globalForces);
 	void applyForce(double deltaT, glm::vec3 force);
 	void setMass(double mass) { this->mass = mass; }
+	std::vector<glm::vec3> updateAABB();
+	void draw();
 	//Instance variables
-	
+	bool isPinned;
 	//Static functions
 	glm::vec3 static combineForces(std::vector<glm::vec3> forces)
 	{
@@ -38,7 +43,8 @@ public:
 	}
 private:
 	double mass;
-	bool isPinned;
+	std::vector<glm::vec3> aabb;
+	GLuint aabbBuffer;
 };
 
 #endif /* PHYSICSOBJECT_H_ */
