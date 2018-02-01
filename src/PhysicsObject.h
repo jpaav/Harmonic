@@ -15,6 +15,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <vector>
+#include "AABB.h"
 
 class PhysicsObject: public Object {
 public:
@@ -25,7 +26,6 @@ public:
 	void update(double deltaT, std::vector<glm::vec3> globalForces);
 	void applyForce(double deltaT, glm::vec3 force);
 	void setMass(double mass) { this->mass = mass; }
-	std::vector<glm::vec3> updateAABB();
 	void draw();
 	//Instance variables
 	bool isPinned;
@@ -43,8 +43,7 @@ public:
 	}
 private:
 	double mass;
-	std::vector<glm::vec3> aabb;
-	GLuint aabbBuffer;
+	AABB aabb;
 };
 
 #endif /* PHYSICSOBJECT_H_ */

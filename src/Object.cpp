@@ -62,14 +62,14 @@ Object::Object(Camera* camera, Material *material){
 	m_cam = camera;
 	triCount = -1;
 	m_mat = material;
-	GLuint ub;
+	GLuint ub;							//Necessary?
 	glGenBuffers(1, &ub);
-	uvBuffer = ub;
-	glBindBuffer(GL_ARRAY_BUFFER, ub);
-	GLuint vb;
+	uvBuffer = ub;						//Necessary?
+	glBindBuffer(GL_ARRAY_BUFFER, ub);	//Necessary?
+	GLuint vb;							//Necessary?
 	glGenBuffers(1, &vb);
-	vertexBuffer = vb;
-	glBindBuffer(GL_ARRAY_BUFFER, vb);
+	vertexBuffer = vb;					//Necessary?
+	glBindBuffer(GL_ARRAY_BUFFER, vb);	//Necessary?
 }
 
 Object::~Object() {
@@ -80,11 +80,13 @@ Object::~Object() {
 void Object::setObjectData(const char* objPath){
 	bool res = loadObj(objPath, &vertices, &uvs, &normals);
 	if(res==false){ printf("loadObj returned false"); }
+
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
 	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), uvs.data(), GL_STATIC_DRAW);
+
 	triCount = (int)(vertices.size());
 }
 
