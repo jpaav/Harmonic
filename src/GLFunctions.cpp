@@ -110,6 +110,7 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
 #include <vector>
 #include <string.h>
 #include <algorithm>
+#include <stdio.h>
 #include "Color.h"
 //GLM libraries
 #include <glm/glm.hpp>
@@ -367,7 +368,8 @@ void loadTexture(const char* path, GLuint* texture)
 		 SOIL_CREATE_NEW_ID,
 		 SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_MULTIPLY_ALPHA
 		);
-	if(*texture == NULL){
+	//TODO: This was *texture=NULL
+	if(!*texture){
 		printf("[Texture loader] \"%s\" failed to load!\n", path);
 	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -411,23 +413,23 @@ bool loadObj(const char* path, std::vector<glm::vec3> *out_vertices, std::vector
 		//Parse vertices
 		if(strcmp(lineHeader, "v")==0){
 			glm::vec3 vertex;
-			fscanf_s(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
+			fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
 			temp_vertices.push_back(vertex);
 		}//Parse UVs
 		else if(strcmp(lineHeader, "vt")==0){
 			glm::vec2 uv;
-			fscanf_s(file, "%f %f\n", &uv.x, &uv.y);
+			fscanf(file, "%f %f\n", &uv.x, &uv.y);
 			temp_uvs.push_back(uv);
 		}//Parse normals
 		else if ( strcmp( lineHeader, "vn" ) == 0 ){
 		    glm::vec3 normal;
-		    fscanf_s(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
+		    fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
 		    temp_normals.push_back(normal);
 		}//Parse faces
 		else if(strcmp(lineHeader, "f")==0){
 			std::string vertex1, vertex2, vertex3;
 			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
-			int matches = fscanf_s(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n",
+			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n",
 					&vertexIndex[0], &uvIndex[0], &normalIndex[0],
 					&vertexIndex[1], &uvIndex[1], &normalIndex[1],
 					&vertexIndex[2], &uvIndex[2], &normalIndex[2] );

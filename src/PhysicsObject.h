@@ -33,11 +33,11 @@ public:
 	glm::vec3 static combineForces(std::vector<glm::vec3> forces)
 	{
 		glm::vec3 forceSum = glm::vec3(0.0f, 0.0f, 0.0f);
-		for each (glm::vec3 force in forces)
+		for (int i=0; i<forces.size(); i++)
 		{
-			forceSum.x += force.x;
-			forceSum.y += force.y;
-			forceSum.z += force.z;
+			forceSum.x += forces[i].x;
+			forceSum.y += forces[i].y;
+			forceSum.z += forces[i].z;
 		}
 		return forceSum;
 	}

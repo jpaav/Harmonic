@@ -31,12 +31,12 @@ PhysicsObject* PhysicsViewport::addPhysicsObject(char* materialName) {
 void PhysicsViewport::updatePhysics()
 {
 
-	for each (Object *obj in objects)
+	for (int i=0; i<objects.size(); i++)
 	{
 		
-		if (strcmp(typeid(*obj).name(), "PhysicsObjectclass"))
+		if (strcmp(typeid(*objects[i]).name(), "PhysicsObjectclass"))
 		{
-			((PhysicsObject *)obj)->update(*deltaTime, globalForces);
+			((PhysicsObject *)objects[i])->update(*deltaTime, globalForces);
 		}
 		
 	}

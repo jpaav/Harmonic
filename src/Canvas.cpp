@@ -15,10 +15,10 @@ Canvas::~Canvas()
 }
 
 void Canvas::drawAll() {
-	for each (UIElement *element in elements)
+	for (int i=0; i<elements.size(); i++)
 	{
-		if (element->visible) {
-			element->render(shader);
+		if (elements[i]->visible) {
+			elements[i]->render(shader);
 		}
 	}
 }
@@ -29,9 +29,10 @@ void Canvas::addElement(UIElement *element) {
 
 void Canvas::hideElement(std::string name)
 {
-	for each (UIElement *element in elements) {
-		if (element->name == name) {
-			element->visible = !element->visible;
+	for (int i=0; i<elements.size(); i++)
+	{
+		if (elements[i]->name == name) {
+			elements[i]->visible = !elements[i]->visible;
 		}
 	}
 }

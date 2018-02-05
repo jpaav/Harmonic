@@ -1,8 +1,8 @@
 #pragma once
 #include "GL/glew.h"
 #include "glm/glm.hpp"
-#include <glm/gtx/transform.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include "glm/gtx/transform.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 #include <vector>
 #include "Transform.h"
 #include "Camera.h"

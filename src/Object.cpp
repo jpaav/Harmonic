@@ -13,9 +13,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <crtdbg.h>
 #include "stdio.h"
 
-void _glAssert(const char * info, int line) {
+//Never used
+/*void _glAssert(const char * info, int line) {
 	char const* sz_GL_INVALID_ENUM = "GL_INVALID_ENUM";
 	char const* sz_GL_INVALID_VALUE = "GL_INVALID_VALUE";
 	char const* sz_GL_INVALID_OPERATION = "GL_INVALID_OPERATION";
@@ -44,6 +46,8 @@ void _glAssert(const char * info, int line) {
 
 #define glAssert() \
     _glAssert(__FILE__, __LINE__);
+    */
+
 Object::Object(const char* objPath, Camera* camera, Material *material) {
 	m_cam = camera;
 	triCount = -1;
