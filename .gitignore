@@ -368,3 +368,7 @@ ASALocalRun/
 
 # MSBuild Binary and Structured Log
 *.binlog
+
+# CMake builds
+x64/
+cmake-build-debug/
