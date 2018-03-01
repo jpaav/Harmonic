@@ -101,10 +101,7 @@ void Object::setLocation(glm::vec3 newLoc){
 	transform.position = newLoc;
 }
 void Object::setRotation(float x,float y,float z){
-	transform.rotation = glm::vec4(x,y,z,0.0f);
-}
-void Object::setRotation(glm::vec4 xyzw){
-	transform.rotation = xyzw;
+	transform.rotation = glm::quat(glm::vec3(x, y, z));
 }
 void Object::setScale(float x,float y,float z){
 	transform.scale = glm::vec3(x,y,z);
@@ -120,7 +117,8 @@ void Object::draw(){	//CHECK WHETHER OBJECT USES UVS TO SAVE RESOURCES
 	//Generating the MVP matrix
 	glm::mat4 LocationMatrix = glm::translate(transform.position);
 	glm::mat4 ScalingMatrix = glm::scale(transform.scale);
-	glm::mat4 MVPmatrix = m_cam->dynamicCameraMatrix() * LocationMatrix/* * RotaionMatrix*/ * ScalingMatrix;
+	glm::mat4 RotationMatrix = glm::toMat4(transform.rotation);
+	glm::mat4 MVPmatrix = m_cam->dynamicCameraMatrix() * LocationMatrix * RotationMatrix * ScalingMatrix;
 
 	//Get a handle on the MVP/sampler uniforms
 	GLuint MatrixLoc =	glGetUniformLocation(m_mat->getShader(), "MVP");

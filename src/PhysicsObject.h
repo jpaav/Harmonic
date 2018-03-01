@@ -16,19 +16,24 @@
 #include <iostream>
 #include <vector>
 #include "AABB.h"
+#include "OBBTree.h"
 
 class PhysicsObject: public Object {
 public:
 	//Constructors and Destructors
-	PhysicsObject(Camera *camera, Material *material);
+	PhysicsObject(Camera *camera, Material *material, GLuint shader);
 	virtual ~PhysicsObject();
 	//Methods
 	void update(double deltaT, std::vector<glm::vec3> globalForces);
 	void applyForce(double deltaT, glm::vec3 force);
 	void setMass(double mass) { this->mass = mass; }
 	void draw();
+
+	void setObjectData(const char* objPath) override ;
 	//Instance variables
 	bool isPinned;
+	GLuint infoShader;
+	OBBTree *obbTree;
 	//Static functions
 	glm::vec3 static combineForces(std::vector<glm::vec3> forces)
 	{
@@ -42,7 +47,7 @@ public:
 		return forceSum;
 	}
 private:
-	double mass;
+	float mass;
 	AABB aabb;
 };
 

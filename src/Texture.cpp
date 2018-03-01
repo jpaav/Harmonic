@@ -2,12 +2,12 @@
 
 
 
-Texture::Texture(char* path, char* name)
+Texture::Texture(std::string path, std::string name)
 {
 	this->id = 0;
 	this->path = path;
 	this->name = name;
-	id = SOIL_load_OGL_texture(path,
+	id = SOIL_load_OGL_texture(path.c_str(),
 		SOIL_LOAD_AUTO,
 		SOIL_CREATE_NEW_ID,
 		SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_MULTIPLY_ALPHA

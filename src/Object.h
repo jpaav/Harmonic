@@ -11,8 +11,9 @@
 #include "Material.h"
 #include "Camera.h"
 #include "Transform.h"
-//#include "Viewport.h"
 #include "glm/glm.hpp"
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include <vector>
 
 class Object {
@@ -36,11 +37,10 @@ public:
 	//Object(GLfloat[], GLfloat[], int, Material, GLuint*, Camera*);
 	virtual ~Object();
 
-	void setObjectData(const char* objPath);
+	virtual void setObjectData(const char* objPath);
 	void setLocation(float x, float y, float z);
 	void setLocation(glm::vec3 xyz);
 	void setRotation(float x, float y, float z);
-	void setRotation(glm::vec4 xyzw);
 	void setScale(float x, float y, float z);
 	void setScale(glm::vec3 xyz);
 	void setMaterial(Material* material);

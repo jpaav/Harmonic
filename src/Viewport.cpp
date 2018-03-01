@@ -101,19 +101,19 @@ std::string Viewport::readFile(const char *filePath) {
     return content;
 }
 
-Texture* Viewport::addTexture(char* path, char* name) {
+Texture* Viewport::addTexture(std::string path, std::string name) {
 	Texture *texture = new Texture(path, name);
 	textures.push_back(texture);
 	return texture;
 }
 
-Material* Viewport::addMaterial(GLuint shader, char* name){
+Material* Viewport::addMaterial(GLuint shader, const char* name){
 	Material *material = new Material(shader, name);
 	materials.push_back(material);
 	return material;
 }
 
-Material* Viewport::getMaterial(char* name){
+Material* Viewport::getMaterial(const char* name){
 	for(int i=0; i < materials.size(); i++){
 		if(strcmp(materials[i]->getName(), name)==0){
 			return materials[i];
@@ -128,7 +128,7 @@ Object* Viewport::addObject(int materialIndex){
 	return o;
 }
 
-Object* Viewport::addObject(char* materialName){
+Object* Viewport::addObject(const char* materialName){
 	Object *o = new Object(mainCamera, getMaterial(materialName));
 	objects.push_back(o);
 	return o;

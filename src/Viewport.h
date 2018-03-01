@@ -47,11 +47,11 @@ public:
 	Viewport(GLFWwindow *window, int width, int height);
 	~Viewport();
 	//Setup
-	Material* addMaterial(GLuint shader, char* name);
-	Material* getMaterial(char* name);
-	Texture* addTexture(char* path, char* name);
+	Material* addMaterial(GLuint shader, const char* name);
+	Material* getMaterial(const char* name);
+	Texture* addTexture(std::string path, std::string name);
 	Object* addObject(int materialIndex);
-	Object* addObject(char* materialName);
+	Object* addObject(const char* materialName);
 	GLuint loadShader(const char* vertexPath, const char* fragmentPath);
 	//Running
 	void updateCameraPos();

@@ -7,15 +7,15 @@
 
 #include "PhysicsObject.h"
 
-PhysicsObject::PhysicsObject(Camera *camera, Material *material) : Object(camera, material){
-	
+PhysicsObject::PhysicsObject(Camera *camera, Material *material, GLuint shader) : Object(camera, material){
+	infoShader = shader;
 	mass = 1.0;
 	isPinned = false;
+	obbTree = nullptr;
 }
 
 PhysicsObject::~PhysicsObject() {
-	mass = 1.0;
-	isPinned = false;
+	delete(obbTree);
 }
 
 void PhysicsObject::update(double deltaT, std::vector<glm::vec3> globalForces) {
@@ -53,10 +53,13 @@ void PhysicsObject::applyForce(double deltaT, glm::vec3 force)
 void PhysicsObject::draw() {
 	Object::draw();
 
-	//Update aabb
-	aabb.update(vertices);
-	// Draw aabb
-	aabb.draw(m_mat->getShader(), this->transform, this->m_cam);
+	// Update and Draw AABB
+	//aabb.draw(infoShader, vertices, this->transform, this->m_cam);
+	obbTree->draw(infoShader, this->transform, this->m_cam);
 }
 
+void PhysicsObject::setObjectData(const char *objPath) {
+	Object::setObjectData(objPath);
+	obbTree = new OBBTree(&vertices);
+}
 

@@ -2,14 +2,14 @@
 
 
 
-PhysicsViewport::PhysicsViewport(GLFWwindow *window, int width, int height, Camera *camera) : Viewport(window, width, height, camera)
+PhysicsViewport::PhysicsViewport(GLFWwindow *window, int width, int height, Camera *camera, GLuint shader) : Viewport(window, width, height, camera)
 {
-
+	infoShader = shader;
 }
 
-PhysicsViewport::PhysicsViewport(GLFWwindow *window, int width, int height) : Viewport(window, width, height)
+PhysicsViewport::PhysicsViewport(GLFWwindow *window, int width, int height, GLuint shader) : Viewport(window, width, height)
 {
-
+	infoShader = shader;
 }
 
 PhysicsViewport::~PhysicsViewport()
@@ -22,8 +22,8 @@ void PhysicsViewport::addGlobalForce(glm::vec3 force)
 	globalForces.push_back(force);
 }
 
-PhysicsObject* PhysicsViewport::addPhysicsObject(char* materialName) {
-	PhysicsObject *o = new PhysicsObject(mainCamera, getMaterial(materialName));
+PhysicsObject* PhysicsViewport::addPhysicsObject(const char* materialName) {
+	PhysicsObject *o = new PhysicsObject(mainCamera, getMaterial(materialName), infoShader);
 	objects.push_back(o);
 	return o;
 }

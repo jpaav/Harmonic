@@ -9,13 +9,14 @@ class PhysicsViewport :
 public:
 	//Public instance variables
 	std::vector<glm::vec3> globalForces;
+	GLuint infoShader;
 	//Constructors and Destructors
-	PhysicsViewport(GLFWwindow *window, int width, int height, Camera *camera);
-	PhysicsViewport(GLFWwindow *window, int width, int height);
+	PhysicsViewport(GLFWwindow *window, int width, int height, Camera *camera, GLuint shader);
+	PhysicsViewport(GLFWwindow *window, int width, int height, GLuint shader);
 	~PhysicsViewport();
 	//Public methods
 	void addGlobalForce(glm::vec3 force);
-	PhysicsObject* addPhysicsObject(char * materialName);
+	PhysicsObject* addPhysicsObject(const char * materialName);
 	void updatePhysics();
 };
 

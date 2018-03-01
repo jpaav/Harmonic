@@ -15,21 +15,17 @@ class Material {
 private:
 	GLuint shader;
 	GLuint texture;
-	char* name;
+	const char* name;
 public:
 	Material();
-	Material(GLuint shader, char* name);
+	Material(GLuint shader, const char* name);
 	virtual ~Material();
 	GLuint 	getShader(){ return shader; }
 	GLuint 	getTexture(){ return texture; }
 	void 	addTexture(GLuint tex);
 
-	char* getName() const {
+	const char* getName() const {
 		return name;
-	}
-
-	void setName(char* name) {
-		this->name = name;
 	}
 };
 

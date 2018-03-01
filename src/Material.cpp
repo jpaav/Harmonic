@@ -15,7 +15,7 @@
 #include "GLFunctions.h"
 #include "GL/glew.h"
 
-Material::Material(GLuint shader, char* name)
+Material::Material(GLuint shader, const char* name)
 {
 	this->shader = shader;
 	texture = NULL;

@@ -26,6 +26,8 @@
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
+#include "OBBTree.h"
+
 //Callbacks
 void error_callback(int error, const char* description) {
 	fprintf(stderr, "Error: %s\n", description);
@@ -105,7 +107,7 @@ int main(int argc, char **argv) {
 
 
 	//Make a new Viewport object
-	PhysicsViewport *vp = new PhysicsViewport(window, width, height);
+	PhysicsViewport *vp = new PhysicsViewport(window, width, height, shader);
 	vp->addGlobalForce(glm::vec3(0.0f, -9.8f, 0.0f));
 
 	//Binds the Viewport to the window for use during key callbacks
@@ -126,21 +128,28 @@ int main(int argc, char **argv) {
 
 
 	//Test Can//
-	Material* canMat = vp->addMaterial(diffuseShader, "canMat");
+	const char *canMatName = "canMat";
+	Material* canMat = vp->addMaterial(diffuseShader, canMatName);
 	Texture* canDiffuse = vp->addTexture("C:/Users/jpaavola/Documents/Code/Harmonic/src/textures/can_Diffuse.png", "canDiffuse");
 	canMat->addTexture(*canDiffuse->getIdPtr());
-	PhysicsObject* can = vp->addPhysicsObject("canMat");
+	PhysicsObject* can = vp->addPhysicsObject(canMatName);
 	can->setObjectData("C:/Users/jpaavola/Documents/Code/Harmonic/src/objs/can/tinCan.obj");
 	can->setLocation(0, 0, 0);
+	can->setRotation(0,0,0);
 	can->isPinned = true;
 	//End Test Can//
 
-	//Ground plane//
-	Material* defaultMat = vp->addMaterial(shader, "default");
-	Object* groundPlane = vp->addObject("default");
+	/*Ground plane//
+	const char *defaultMatName = "default";
+	Material* defaultMat = vp->addMaterial(shader, defaultMatName);
+	Object* groundPlane = vp->addObject(defaultMatName);
 	groundPlane->setObjectData("C:/Users/jpaavola/Documents/Code/Harmonic/src/objs/Plane.obj");
 	groundPlane->setScale(glm::vec3(10.0f, 10.0f, 10.0f));
-	//End Ground Plane//
+	//End Ground Plane*/
+
+	//Test OBBTree//
+	can->obbTree;
+	//End Test OBBTree//
 
 	//Text Setup//
 	Canvas *UI = new Canvas(textShader);
