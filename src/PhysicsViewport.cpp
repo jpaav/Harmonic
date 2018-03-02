@@ -30,14 +30,22 @@ PhysicsObject* PhysicsViewport::addPhysicsObject(const char* materialName) {
 
 void PhysicsViewport::updatePhysics()
 {
-
-	for (int i=0; i<objects.size(); i++)
-	{
-		
-		if (strcmp(typeid(*objects[i]).name(), "PhysicsObjectclass"))
+	std::vector<PhysicsObject *> physicsObjects;
+	for (auto &object : objects) {
+		//Filter master object list by Object type
+		if (strcmp(typeid(*object).name(), "PhysicsObjectclass"))
 		{
-			((PhysicsObject *)objects[i])->update(*deltaTime, globalForces);
+			physicsObjects.push_back((PhysicsObject *) object);
 		}
-		
 	}
+	int combinations = (int)(physicsObjects.size() * (physicsObjects.size()-1) / 2);
+	for (int i = 0; i < combinations; ++i) {
+		for (int j = 0; j < combinations - i; ++j) {
+			physicsObjects[j]->updateCollisions(*deltaTime, physicsObjects[i]);
+		}
+	}
+	for(auto &physicsObject : physicsObjects) {
+		physicsObject->updateForces(*deltaTime, globalForces);
+	}
+
 }

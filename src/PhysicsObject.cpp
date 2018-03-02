@@ -18,16 +18,40 @@ PhysicsObject::~PhysicsObject() {
 	delete(obbTree);
 }
 
-void PhysicsObject::update(double deltaT, std::vector<glm::vec3> globalForces) {
-	//Stop update if object doesn't move
-	//This may be changed later when collisions are added
-	if (isPinned) { return; }
-	//Combine global and local forces
-	std::vector<glm::vec3> forces;
-	forces.push_back(combineForces(globalForces));
-	forces.push_back(combineForces(transform.localForces));
-	//Apply forces
-	applyForce(deltaT, combineForces(forces));
+void PhysicsObject::updateCollisions(double deltaT, PhysicsObject *otherObject) {
+	//TODO: change otherObject name to be less terrible
+	//Get all 15 axis of separation
+	//TODO: there should be 15 but we're missing 3, not sure which
+	std::vector<glm::vec3> L;
+	L.push_back(obbTree->covarianceMatrix[0]);
+	L.push_back(obbTree->covarianceMatrix[1]);
+	L.push_back(obbTree->covarianceMatrix[2]);
+	L.push_back(otherObject->obbTree->covarianceMatrix[0]);
+	L.push_back(otherObject->obbTree->covarianceMatrix[1]);
+	L.push_back(otherObject->obbTree->covarianceMatrix[2]);
+	L.push_back(obbTree->covarianceMatrix[0] * otherObject->obbTree->covarianceMatrix[0]);
+	L.push_back(obbTree->covarianceMatrix[0] * otherObject->obbTree->covarianceMatrix[1]);
+	L.push_back(obbTree->covarianceMatrix[0] * otherObject->obbTree->covarianceMatrix[2]);
+	L.push_back(obbTree->covarianceMatrix[1] * otherObject->obbTree->covarianceMatrix[1]);
+	L.push_back(obbTree->covarianceMatrix[1] * otherObject->obbTree->covarianceMatrix[2]);
+	L.push_back(obbTree->covarianceMatrix[2] * otherObject->obbTree->covarianceMatrix[2]);
+
+	glm::vec3 A = obbTree->meanMatrix;
+	glm::vec3 B = otherObject->obbTree->meanMatrix;
+	//Half dimensions
+	//TODO: to implement this, find the vertex closest to B
+	glm::vec3 a;
+	glm::vec3 b;
+	//Initialize radii
+	float r_a=0;
+	float r_b=0;
+	//TODO vvv ake sure the signs on this are ok vvv
+	glm::vec3 T = B - A;
+
+	for (int i = 0; i < 15; ++i) {
+		//TODO: procedure:
+		//Find r_a and r_b
+	}
 }
 
 void PhysicsObject::applyForce(double deltaT, glm::vec3 force)
@@ -61,5 +85,16 @@ void PhysicsObject::draw() {
 void PhysicsObject::setObjectData(const char *objPath) {
 	Object::setObjectData(objPath);
 	obbTree = new OBBTree(&vertices);
+}
+
+void PhysicsObject::updateForces(double deltaT, std::vector<glm::vec3> globalForces) {
+	//Stop update if object doesn't move
+	if (isPinned) { return; }
+	//Combine global and local forces
+	std::vector<glm::vec3> forces;
+	forces.push_back(combineForces(globalForces));
+	forces.push_back(combineForces(transform.localForces));
+	//Apply forces
+	applyForce(deltaT, combineForces(forces));
 }
 

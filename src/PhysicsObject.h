@@ -22,12 +22,13 @@ class PhysicsObject: public Object {
 public:
 	//Constructors and Destructors
 	PhysicsObject(Camera *camera, Material *material, GLuint shader);
-	virtual ~PhysicsObject();
+	virtual ~PhysicsObject() override;
 	//Methods
-	void update(double deltaT, std::vector<glm::vec3> globalForces);
+	void updateCollisions(double deltaT, PhysicsObject *otherObject);
+	void updateForces(double deltaT, std::vector<glm::vec3> globalForces);
 	void applyForce(double deltaT, glm::vec3 force);
 	void setMass(double mass) { this->mass = mass; }
-	void draw();
+	void draw() override;
 
 	void setObjectData(const char* objPath) override ;
 	//Instance variables
