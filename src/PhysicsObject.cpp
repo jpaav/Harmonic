@@ -11,6 +11,7 @@ PhysicsObject::PhysicsObject(Camera *camera, Material *material, GLuint shader) 
 	infoShader = shader;
 	mass = 1.0;
 	isPinned = false;
+	colliding = false;
 	obbTree = nullptr;
 }
 
@@ -18,40 +19,67 @@ PhysicsObject::~PhysicsObject() {
 	delete(obbTree);
 }
 
-void PhysicsObject::updateCollisions(double deltaT, PhysicsObject *otherObject) {
+Collision* PhysicsObject::updateCollisions(double deltaT, PhysicsObject *otherObject) {
 	//TODO: change otherObject name to be less terrible
 	//Get all 15 axis of separation
-	//TODO: there should be 15 but we're missing 3, not sure which
+	//TODO: Make this an array for conservation
 	std::vector<glm::vec3> L;
-	L.push_back(obbTree->covarianceMatrix[0]);
-	L.push_back(obbTree->covarianceMatrix[1]);
-	L.push_back(obbTree->covarianceMatrix[2]);
-	L.push_back(otherObject->obbTree->covarianceMatrix[0]);
-	L.push_back(otherObject->obbTree->covarianceMatrix[1]);
-	L.push_back(otherObject->obbTree->covarianceMatrix[2]);
-	L.push_back(obbTree->covarianceMatrix[0] * otherObject->obbTree->covarianceMatrix[0]);
-	L.push_back(obbTree->covarianceMatrix[0] * otherObject->obbTree->covarianceMatrix[1]);
-	L.push_back(obbTree->covarianceMatrix[0] * otherObject->obbTree->covarianceMatrix[2]);
-	L.push_back(obbTree->covarianceMatrix[1] * otherObject->obbTree->covarianceMatrix[1]);
-	L.push_back(obbTree->covarianceMatrix[1] * otherObject->obbTree->covarianceMatrix[2]);
-	L.push_back(obbTree->covarianceMatrix[2] * otherObject->obbTree->covarianceMatrix[2]);
+	L.push_back(obbTree->getTrueAxis(0));
+	L.push_back(obbTree->getTrueAxis(1));
+	L.push_back(obbTree->getTrueAxis(2));
+	L.push_back(otherObject->obbTree->getTrueAxis(0));
+	L.push_back(otherObject->obbTree->getTrueAxis(1));
+	L.push_back(otherObject->obbTree->getTrueAxis(2));
+	L.push_back(glm::cross(obbTree->getTrueAxis(0), otherObject->obbTree->getTrueAxis(0)));
+	L.push_back(glm::cross(obbTree->getTrueAxis(0), otherObject->obbTree->getTrueAxis(1)));
+	L.push_back(glm::cross(obbTree->getTrueAxis(0), otherObject->obbTree->getTrueAxis(2)));
+	L.push_back(glm::cross(obbTree->getTrueAxis(1), otherObject->obbTree->getTrueAxis(0)));
+	L.push_back(glm::cross(obbTree->getTrueAxis(1), otherObject->obbTree->getTrueAxis(1)));
+	L.push_back(glm::cross(obbTree->getTrueAxis(1), otherObject->obbTree->getTrueAxis(2)));
+	L.push_back(glm::cross(obbTree->getTrueAxis(2), otherObject->obbTree->getTrueAxis(0)));
+	L.push_back(glm::cross(obbTree->getTrueAxis(2), otherObject->obbTree->getTrueAxis(1)));
+	L.push_back(glm::cross(obbTree->getTrueAxis(2), otherObject->obbTree->getTrueAxis(2)));
 
-	glm::vec3 A = obbTree->meanMatrix;
-	glm::vec3 B = otherObject->obbTree->meanMatrix;
+	glm::vec3 A = obbTree->getCenter();
+	glm::vec3 B = otherObject->obbTree->getCenter();
 	//Half dimensions
-	//TODO: to implement this, find the vertex closest to B
-	glm::vec3 a;
-	glm::vec3 b;
+	glm::vec3 a = B - this->obbTree->getExtrema(0);
+	glm::vec3 b = A - otherObject->obbTree->getExtrema(0);
+	for (int j = 1; j < 8; ++j) {
+		a = glm::min(a, glm::abs(B - this->obbTree->getExtrema(j)));
+		b = glm::min(b, glm::abs(A - otherObject->obbTree->getExtrema(j)));
+	}
 	//Initialize radii
-	float r_a=0;
-	float r_b=0;
+	//glm::fvec3 r_a = glm::vec3(0);
+	//glm::fvec3 r_b = glm::vec3(0);
+	float r_a, r_b;
 	//TODO vvv ake sure the signs on this are ok vvv
 	glm::vec3 T = B - A;
+	bool disjoint = true;
+	float radii=0 , distance=0;  //debugging variables
 
 	for (int i = 0; i < 15; ++i) {
-		//TODO: procedure:
 		//Find r_a and r_b
+		r_a = glm::length(glm::dot(a, L[i]));
+		r_b = glm::length(glm::dot(b, L[i]));
+		distance = glm::length(glm::dot(T, L[i]));
+		radii = r_a + r_b;
+		//std::cout << "\n=============\ni: " << i << std::endl << "L: " << glm::to_string(L[i]) << std::endl << "Radii: " << radii << std::endl << "Distance: " << distance << std::endl;
+		if(distance > radii) {
+			disjoint = false;
+			break;
+		}
 	}
+	if(!disjoint) {
+		std::cout << "\n\n\nColliding!\n\n\n" << std::endl;
+		colliding = true;
+		return new Collision(this, otherObject);
+	}else {
+		std::cout << "Disjoint!" << std::endl;
+		colliding = false;
+		return nullptr;
+	}
+
 }
 
 void PhysicsObject::applyForce(double deltaT, glm::vec3 force)
@@ -84,7 +112,7 @@ void PhysicsObject::draw() {
 
 void PhysicsObject::setObjectData(const char *objPath) {
 	Object::setObjectData(objPath);
-	obbTree = new OBBTree(&vertices);
+	obbTree = new OBBTree(&vertices, &transform);
 }
 
 void PhysicsObject::updateForces(double deltaT, std::vector<glm::vec3> globalForces) {
@@ -97,4 +125,6 @@ void PhysicsObject::updateForces(double deltaT, std::vector<glm::vec3> globalFor
 	//Apply forces
 	applyForce(deltaT, combineForces(forces));
 }
+
+
 

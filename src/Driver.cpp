@@ -35,7 +35,7 @@ void error_callback(int error, const char* description) {
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action,
 		int mods) {
-	Viewport *v = static_cast<Viewport*>(glfwGetWindowUserPointer(window));
+	auto *v = static_cast<Viewport*>(glfwGetWindowUserPointer(window));
 	Canvas *c = v->getCanvas();
 	Camera *cam = v->getMainCamera();
 	if (key == GLFW_KEY_ESCAPE) {
@@ -55,16 +55,19 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action,
 	else if (key == GLFW_KEY_I && action == 0) {
 		c->hideElement("Info");
 	}
+	else if (key == GLFW_KEY_P && action == 0) {
+		c->hideElement("Physics");
+	}
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-	Viewport *v = static_cast<Viewport*>(glfwGetWindowUserPointer(window));
+	auto *v = static_cast<Viewport*>(glfwGetWindowUserPointer(window));
 	Camera *cam = v->getMainCamera();
 	cam->fov -= yoffset/10;
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
-	Viewport *v = static_cast<Viewport*>(glfwGetWindowUserPointer(window));
+	auto *v = static_cast<Viewport*>(glfwGetWindowUserPointer(window));
 	Camera *cam = v->getMainCamera();
 	if (cam->mode == INPUT_MODE) {
 		cam->xpos = xpos;
@@ -82,7 +85,7 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 
-	window = glfwCreateWindow(800, 600, "Harmonic", NULL, NULL);
+	window = glfwCreateWindow(800, 600, "Harmonic", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	
@@ -107,8 +110,8 @@ int main(int argc, char **argv) {
 
 
 	//Make a new Viewport object
-	PhysicsViewport *vp = new PhysicsViewport(window, width, height, shader);
-	vp->addGlobalForce(glm::vec3(0.0f, -9.8f, 0.0f));
+	auto *vp = new PhysicsViewport(window, width, height, shader);
+	vp->addGlobalForce(glm::vec3(0.0f, -0.5f, 0.0f));
 
 	//Binds the Viewport to the window for use during key callbacks
 	glfwSetWindowUserPointer(window, vp);
@@ -135,29 +138,41 @@ int main(int argc, char **argv) {
 	PhysicsObject* can = vp->addPhysicsObject(canMatName);
 	can->setObjectData("C:/Users/jpaavola/Documents/Code/Harmonic/src/objs/can/tinCan.obj");
 	can->setLocation(0, 0, 0);
-	can->setRotation(0,0,0);
-	can->isPinned = true;
+	can->setRotation(0, 0, 0);
+	can->setName("Can");
+	//can->isPinned = true;
 	//End Test Can//
+
+	//Test Ico//
+	const char *defaultMatName = "default";
+	vp->addMaterial(shader, defaultMatName);
+	PhysicsObject* ico = vp->addPhysicsObject(defaultMatName);
+	ico->setObjectData("C:/Users/jpaavola/Documents/Code/Harmonic/src/objs/IcoSphere.obj");
+	ico->setLocation(0, -1, 0);
+	ico->setRotation(0,  0, 0);
+	ico->isPinned = true;
+	ico->setName("Ico");
+	//End Test Ico//
 
 	/*Ground plane//
 	const char *defaultMatName = "default";
 	Material* defaultMat = vp->addMaterial(shader, defaultMatName);
-	Object* groundPlane = vp->addObject(defaultMatName);
+	PhysicsObject* groundPlane = vp->addPhysicsObject(defaultMatName);
 	groundPlane->setObjectData("C:/Users/jpaavola/Documents/Code/Harmonic/src/objs/Plane.obj");
-	groundPlane->setScale(glm::vec3(10.0f, 10.0f, 10.0f));
+	//groundPlane->setScale(glm::vec3(10.0f, 10.0f, 10.0f));
+	groundPlane->isPinned = true;
 	//End Ground Plane*/
 
-	//Test OBBTree//
-	can->obbTree;
-	//End Test OBBTree//
-
 	//Text Setup//
-	Canvas *UI = new Canvas(textShader);
+	auto *UI = new Canvas(textShader);
 	vp->setCanvas(UI);
-	float sx = 2.0 / width;
-	float sy = 2.0 / height;
-	TextBox *infoTB = new TextBox("Info", 16, -1 + 8 * sx, 1-15*sy, sx, sy, -1+275*sy);
-	UI->addElement(infoTB);
+	float sx = 2.0f / width;
+	float sy = 2.0f / height;
+	TextBox *generalTB = new TextBox("Info", 16, -1, 1, sx, sy, -1+275*sy);
+	TextBox *physicsTB = new TextBox("Physics", 16, 0, 1, sx, sy, -1+275*sy);
+	UI->addElement(generalTB);
+	UI->addElement(physicsTB);
+	std::string physicsCompString;
 	std::string fpsString;
 	std::string infoCompString;
 
@@ -179,12 +194,10 @@ int main(int argc, char **argv) {
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 
-	float currentFrame, lastFrame;		//For framerate and deltaTime
-	float lastUpdate;					//For updating the simulation
+	double currentFrame, lastFrame;		//For framerate and deltaTime
 
 	lastFrame  = glfwGetTime();	//Should this be closer to the currentFrame call?
-	lastUpdate = glfwGetTime();
-	bool canUpdate = false;
+
 	while (!glfwWindowShouldClose(window)) {
 		//Get Time
 		currentFrame = glfwGetTime();
@@ -198,7 +211,7 @@ int main(int argc, char **argv) {
 		//Combine strings
 		infoCompString.append(vendor).append(version).append(renderer).append(fpsString);
 
-		infoTB->setText(infoCompString);
+		generalTB->setText(infoCompString);
 		//delete (void*)&infoComp;
 		lastFrame = currentFrame;
 		//Render//
@@ -215,6 +228,15 @@ int main(int argc, char **argv) {
 		vp->updateCameraPos();
 		//Update Physics
 		vp->updatePhysics();
+		//Draw physics information
+		physicsCompString.clear();
+		for(auto &collision : vp->collisions) {
+			physicsCompString.append(collision->toString()).append("\n");
+		}
+		if(physicsCompString.empty()) {
+			physicsCompString.append("No collisions");
+		}
+		physicsTB->setText(physicsCompString);
 		//Draw All objects//
 		vp->drawAll();
 		//Draw Canvas//

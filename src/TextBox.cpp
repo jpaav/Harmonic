@@ -5,6 +5,7 @@
 TextBox::TextBox(std::string name, int fontSize, float xPosition, float yPosition, float xScale, float yScale, float lineSpacing) 
 	: UIElement(name, UIElement::UIElementType::TEXT_BOX, xPosition, yPosition, xScale, yScale, lineSpacing)
 {
+
 	this->text = "Temp";
 	
 	if (FT_Init_FreeType(&ft)) {

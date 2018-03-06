@@ -18,6 +18,8 @@
 
 class Object {
 protected:
+	std::string name;
+protected:
 	Material *m_mat;
 	GLuint vertexBuffer;
 	GLuint uvBuffer;
@@ -44,6 +46,17 @@ public:
 	void setScale(float x, float y, float z);
 	void setScale(glm::vec3 xyz);
 	void setMaterial(Material* material);
+	const std::string &getName() const {
+		return name;
+	}
+
+	//TODO: use :: instead of -> for "this"
+	void setName(const std::string &name) {
+		Object::name = name;
+	}
+	void setName(const char* &name) {
+		Object::name = std::string(name);
+	}
 };
 
 #endif /* OBJECT_H_ */

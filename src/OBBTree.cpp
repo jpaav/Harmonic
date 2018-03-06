@@ -7,7 +7,9 @@
 
 
 
-OBBTree::OBBTree(std::vector<glm::vec3> *vertices) {
+OBBTree::OBBTree(std::vector<glm::vec3> *vertices, Transform* transform) {
+
+	this->transform = transform;
 
 	std::vector<Triangle> triangles = loadTriangles(*vertices);
 	if(!triangles.empty()){
@@ -16,15 +18,15 @@ OBBTree::OBBTree(std::vector<glm::vec3> *vertices) {
 		for (int i = 0; i < triangles.size(); ++i) {
 			mean = mean + triangles[i][0] + triangles[i][1] + triangles[i][2];
 		}
-		meanMatrix = (1/(3 * (float)triangles.size())) * mean;
-		meanMatrix = glm::normalize(meanMatrix);
-		std::cout << "Mean Matrix:\n" << glm::to_string(meanMatrix) << std::endl;
+		center = (1/(3 * (float)triangles.size())) * mean;
+		center = glm::normalize(center);
+		std::cout << "Mean Matrix:\n" << glm::to_string(center) << std::endl;
 		//Covariance matrix
 		glm::mat3 covSum = glm::mat3();
 		for (int j = 0; j < triangles.size(); ++j) {
-			covSum +=   (triangles[j][0]-meanMatrix)*(triangles[j][0]-meanMatrix)*
-						(triangles[j][1]-meanMatrix)*(triangles[j][1]-meanMatrix)*
-						(triangles[j][2]-meanMatrix)*(triangles[j][2]-meanMatrix);
+			covSum +=   (triangles[j][0]-center)*(triangles[j][0]-center)*
+						(triangles[j][1]-center)*(triangles[j][1]-center)*
+						(triangles[j][2]-center)*(triangles[j][2]-center);
 	}
 		covarianceMatrix = (1/(3 * (float)triangles.size())) * covSum;
 		std::cout << "Covariance Matrix:\n" << glm::to_string(covarianceMatrix) << std::endl;
@@ -98,7 +100,7 @@ void OBBTree::draw(GLuint shader, Transform objTransform, Camera *camera){
 	glUniformMatrix4fv(MatrixLoc, 1, GL_FALSE, &MVPmatrix[0][0]);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glClear(GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_DEPTH_BUFFER_BIT);
 
 	glEnableVertexAttribArray(0);
 	//Add Vertex Position Attribute
@@ -126,6 +128,7 @@ void OBBTree::findBounds(glm::mat3 basis, std::vector<glm::vec3> *vertices) {
 	float x_pos=0, y_pos=0, z_pos=0, x_b_pos=0, y_b_pos=0, z_b_pos=0;
 	float x_neg=0, y_neg=0, z_neg=0, x_b_neg=0, y_b_neg=0, z_b_neg=0;
 	glm::vec3 temp_b;
+	//Find extrema
 	for (auto vertex : *vertices) {
 		temp_b = basis * vertex;
 		if(x_b_pos > temp_b.x) {
@@ -153,6 +156,17 @@ void OBBTree::findBounds(glm::mat3 basis, std::vector<glm::vec3> *vertices) {
 			z_neg = vertex.z;
 		}
 	}
+	//Format extrema
+	extrema.emplace_back(x_neg, y_neg, z_neg);
+	extrema.emplace_back(x_neg, y_pos, z_neg);
+	extrema.emplace_back(x_neg, y_neg, z_pos);
+	extrema.emplace_back(x_pos, y_neg, z_neg);
+	extrema.emplace_back(x_pos, y_pos, z_neg);
+	extrema.emplace_back(x_pos, y_pos, z_pos);
+	extrema.emplace_back(x_pos, y_neg, z_pos);
+	extrema.emplace_back(x_neg, y_neg, z_pos);
+
+	//Add vertices
 	boxVertices.emplace_back(x_neg, y_neg, z_neg);
 	boxVertices.emplace_back(x_neg, y_neg, z_pos);
 	boxVertices.emplace_back(x_neg, y_pos, z_pos);
@@ -201,4 +215,16 @@ void OBBTree::findBounds(glm::mat3 basis, std::vector<glm::vec3> *vertices) {
 	boxVertices.emplace_back(x_neg, y_pos, z_pos);
 	boxVertices.emplace_back(x_pos, y_neg, z_pos);
 
+}
+
+glm::vec3 OBBTree::getExtrema(size_t index) {
+	return glm::vec3(glm::translate(transform->position) * glm::toMat4(transform->rotation) * glm::scale(transform->scale) * glm::vec4(extrema[index], 1.0f));
+}
+
+glm::vec3 OBBTree::getCenter() {
+	return glm::vec3(glm::translate(transform->position) * glm::toMat4(transform->rotation) * glm::scale(transform->scale) * glm::vec4(center, 1.0f));
+}
+
+glm::vec3 OBBTree::getTrueAxis(int axisIndex) {
+	return glm::vec3(glm::translate(transform->position) * glm::toMat4(transform->rotation) * glm::scale(transform->scale) * glm::vec4(glm::column(covarianceMatrix, axisIndex), 1.0f));
 }

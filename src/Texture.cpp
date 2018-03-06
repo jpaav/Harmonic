@@ -12,7 +12,7 @@ Texture::Texture(std::string path, std::string name)
 		SOIL_CREATE_NEW_ID,
 		SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_MULTIPLY_ALPHA
 	);
-	if (id == NULL) {
+	if (&id == nullptr) {
 		std::cout << "[Texture loader] \"" << path << "\" failed to load!\n";
 	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

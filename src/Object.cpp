@@ -83,7 +83,7 @@ Object::~Object() {
 
 void Object::setObjectData(const char* objPath){
 	bool res = loadObj(objPath, &vertices, &uvs, &normals);
-	if(res==false){ printf("loadObj returned false"); }
+	if(!res){ printf("loadObj returned false"); }
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);

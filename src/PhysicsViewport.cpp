@@ -23,13 +23,14 @@ void PhysicsViewport::addGlobalForce(glm::vec3 force)
 }
 
 PhysicsObject* PhysicsViewport::addPhysicsObject(const char* materialName) {
-	PhysicsObject *o = new PhysicsObject(mainCamera, getMaterial(materialName), infoShader);
+	auto *o = new PhysicsObject(mainCamera, getMaterial(materialName), infoShader);
 	objects.push_back(o);
 	return o;
 }
 
 void PhysicsViewport::updatePhysics()
 {
+	collisions.clear();
 	std::vector<PhysicsObject *> physicsObjects;
 	for (auto &object : objects) {
 		//Filter master object list by Object type
@@ -38,10 +39,14 @@ void PhysicsViewport::updatePhysics()
 			physicsObjects.push_back((PhysicsObject *) object);
 		}
 	}
-	int combinations = (int)(physicsObjects.size() * (physicsObjects.size()-1) / 2);
-	for (int i = 0; i < combinations; ++i) {
-		for (int j = 0; j < combinations - i; ++j) {
-			physicsObjects[j]->updateCollisions(*deltaTime, physicsObjects[i]);
+	Collision *temp;
+	//TODO: Make sure this doesn't run when there's less than 2 objects
+	for (int i = 0; i < physicsObjects.size()-1; ++i) {
+		for (int j = i+1; j < physicsObjects.size(); ++j) {
+			temp = physicsObjects[j]->updateCollisions(*deltaTime, physicsObjects[i]);
+			if(temp != nullptr) {
+				collisions.push_back(temp);
+			}
 		}
 	}
 	for(auto &physicsObject : physicsObjects) {
