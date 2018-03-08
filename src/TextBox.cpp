@@ -1,9 +1,10 @@
 #include "TextBox.h"
 
+#include <utility>
 
 
-TextBox::TextBox(std::string name, int fontSize, float xPosition, float yPosition, float xScale, float yScale, float lineSpacing) 
-	: UIElement(name, UIElement::UIElementType::TEXT_BOX, xPosition, yPosition, xScale, yScale, lineSpacing)
+TextBox::TextBox(std::string name, int fontSize, float xPosition, float yPosition, float xScale, float yScale, float lineSpacing)
+	: UIElement(std::move(name), UIElement::UIElementType::TEXT_BOX, xPosition, yPosition, xScale, yScale, lineSpacing)
 {
 
 	this->text = "Temp";
@@ -40,7 +41,7 @@ TextBox::~TextBox()
 
 int TextBox::render(GLuint shader)
 {
-	int num_chars = text.length();
+	auto num_chars = static_cast<int>(text.length());
 	float tempx = x;
 	float tempy = y;
 	float tempsx = sx;

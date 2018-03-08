@@ -45,7 +45,8 @@ protected:
 public:
 	Viewport(GLFWwindow *window, int width, int height, Camera *camera);
 	Viewport(GLFWwindow *window, int width, int height);
-	~Viewport();
+
+	virtual ~Viewport();
 	//Setup
 	Material* addMaterial(GLuint shader, const char* name);
 	Material* getMaterial(const char* name);

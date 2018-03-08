@@ -5,6 +5,9 @@
  *      Author: Joseph
  */
 #include "Viewport.h"
+
+#include <utility>
+
 Viewport::Viewport(GLFWwindow *window, int width, int height, Camera *camera){
 	this->height = height;
 	this->width = width;
@@ -91,7 +94,7 @@ std::string Viewport::readFile(const char *filePath) {
         return "";
     }
 
-    std::string line = "";
+    std::string line;
     while(!fileStream.eof()) {
         std::getline(fileStream, line);
         content.append(line + "\n");
@@ -102,7 +105,7 @@ std::string Viewport::readFile(const char *filePath) {
 }
 
 Texture* Viewport::addTexture(std::string path, std::string name) {
-	Texture *texture = new Texture(path, name);
+	Texture *texture = new Texture(std::move(path), name);
 	textures.push_back(texture);
 	return texture;
 }

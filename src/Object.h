@@ -33,7 +33,6 @@ protected:
 public:
 	virtual void draw();
 	void drawEdges();
-	Object() {}
 	Object(Camera* camera, Material* material);
 	Object(const char* objPath, Camera* camera, Material* material);
 	//Object(GLfloat[], GLfloat[], int, Material, GLuint*, Camera*);

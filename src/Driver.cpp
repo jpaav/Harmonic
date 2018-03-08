@@ -8,7 +8,7 @@
 //Standard functions
 #include <iostream>
 #include <sstream>
-#include "stdio.h"
+#include <cstdio>
 //My includes
 #include "Vector3.h"
 #include "Object.h"
@@ -42,15 +42,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action,
 		glfwSetWindowShouldClose(window, 1);
 	}
 	else if (key == GLFW_KEY_V) {
-		if (cam->mode == STATIC_MODE) {
-			cam->mode = TURNTABLE_MODE;
-		}
-		else if (cam->mode == TURNTABLE_MODE) {
-			cam->mode = INPUT_MODE;
-		}
-		else if (cam->mode == INPUT_MODE) {
-			cam->mode = STATIC_MODE;
-		}
+		cam->rotateViewMode();
 	}
 	else if (key == GLFW_KEY_I && action == 0) {
 		c->hideElement("Info");
@@ -58,12 +50,29 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action,
 	else if (key == GLFW_KEY_P && action == 0) {
 		c->hideElement("Physics");
 	}
+	else if (key == GLFW_KEY_SPACE && action == 0
+			&& ((PhysicsViewport*)v)->update_state==CONTINUOUS) {
+		((PhysicsViewport*)v)->update_state = WAIT;
+	}
+	else if (key == GLFW_KEY_SPACE && action == 0
+	         && ((PhysicsViewport*)v)->update_state==WAIT) {
+		((PhysicsViewport*)v)->update_state = CONTINUOUS;
+	}
+	else if (key == GLFW_KEY_RIGHT && action == 0
+	         && ((PhysicsViewport*)v)->update_state==WAIT) {
+		((PhysicsViewport*)v)->update_state = SINGLE_FRAME;
+	}
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 	auto *v = static_cast<Viewport*>(glfwGetWindowUserPointer(window));
 	Camera *cam = v->getMainCamera();
-	cam->fov -= yoffset/10;
+	if(cam->mode == INPUT_MODE) {
+		cam->changeSpeed(float(yoffset));
+	}else{
+		cam->fov -= yoffset/10;
+	}
+
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
@@ -87,7 +96,7 @@ int main(int argc, char **argv) {
 
 	window = glfwCreateWindow(800, 600, "Harmonic", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glewExperimental = GL_TRUE;
@@ -169,7 +178,7 @@ int main(int argc, char **argv) {
 	float sx = 2.0f / width;
 	float sy = 2.0f / height;
 	TextBox *generalTB = new TextBox("Info", 16, -1, 1, sx, sy, -1+275*sy);
-	TextBox *physicsTB = new TextBox("Physics", 16, 0, 1, sx, sy, -1+275*sy);
+	TextBox *physicsTB = new TextBox("Physics", 16, 0.2, 1, sx, sy, -1+275*sy);
 	UI->addElement(generalTB);
 	UI->addElement(physicsTB);
 	std::string physicsCompString;
@@ -196,6 +205,8 @@ int main(int argc, char **argv) {
 
 	double currentFrame, lastFrame;		//For framerate and deltaTime
 
+	double testx=0, testy=0;
+
 	lastFrame  = glfwGetTime();	//Should this be closer to the currentFrame call?
 
 	while (!glfwWindowShouldClose(window)) {
@@ -206,10 +217,12 @@ int main(int argc, char **argv) {
 		fpsString.clear();
 		infoCompString.clear();
 		//Text rendering
+		glfwGetCursorPos(window, &testx, &testy);
 		fpsString.append(std::to_string(currentFrame - lastFrame)).append("ms\n");
 		
 		//Combine strings
-		infoCompString.append(vendor).append(version).append(renderer).append(fpsString);
+		infoCompString.append(vendor).append(version).append(renderer).append(fpsString)
+				.append(std::to_string(testx) + ", " + std::to_string(testy));;
 
 		generalTB->setText(infoCompString);
 		//delete (void*)&infoComp;
@@ -234,7 +247,7 @@ int main(int argc, char **argv) {
 			physicsCompString.append(collision->toString()).append("\n");
 		}
 		if(physicsCompString.empty()) {
-			physicsCompString.append("No collisions");
+			physicsCompString.append("No collisions\n");
 		}
 		physicsTB->setText(physicsCompString);
 		//Draw All objects//

@@ -1,5 +1,6 @@
 #include "UIElement.h"
 
+#include <utility>
 
 
 UIElement::UIElement(std::string name, UIElement::UIElementType type, float x, float y, float sx, float sy, float lineSpacing)
@@ -7,7 +8,7 @@ UIElement::UIElement(std::string name, UIElement::UIElementType type, float x, f
 	int windowWidth, windowHeight;
 	glfwGetFramebufferSize(glfwGetCurrentContext(), &windowWidth, &windowHeight);
 
-	this->name = name;
+	this->name = std::move(name);
 	this->type = type;
 	this->x = x + 8 * sx;
 	this->y = y - 15 * sy;

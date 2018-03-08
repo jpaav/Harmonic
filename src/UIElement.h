@@ -18,7 +18,8 @@ public:
 	bool visible;
 	std::string name;
 	UIElement(std::string name, UIElementType type, float x, float y, float sx, float sy, float lineSpacing);
-	~UIElement();
+
+	virtual ~UIElement();
 	virtual int render(GLuint shader) = 0;
 private:
 	UIElement::UIElementType type;

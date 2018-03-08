@@ -17,7 +17,6 @@ private:
 	GLuint texture;
 	const char* name;
 public:
-	Material();
 	Material(GLuint shader, const char* name);
 	virtual ~Material();
 	GLuint 	getShader(){ return shader; }

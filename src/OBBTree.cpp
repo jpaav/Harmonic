@@ -15,18 +15,18 @@ OBBTree::OBBTree(std::vector<glm::vec3> *vertices, Transform* transform) {
 	if(!triangles.empty()){
 		//Mean matrix
 		glm::vec3 mean = glm::vec3(0,0,0);
-		for (int i = 0; i < triangles.size(); ++i) {
-			mean = mean + triangles[i][0] + triangles[i][1] + triangles[i][2];
+		for (auto &triangle : triangles) {
+			mean = mean + triangle[0] + triangle[1] + triangle[2];
 		}
 		center = (1/(3 * (float)triangles.size())) * mean;
 		center = glm::normalize(center);
 		std::cout << "Mean Matrix:\n" << glm::to_string(center) << std::endl;
 		//Covariance matrix
 		glm::mat3 covSum = glm::mat3();
-		for (int j = 0; j < triangles.size(); ++j) {
-			covSum +=   (triangles[j][0]-center)*(triangles[j][0]-center)*
-						(triangles[j][1]-center)*(triangles[j][1]-center)*
-						(triangles[j][2]-center)*(triangles[j][2]-center);
+		for (auto &triangle : triangles) {
+			covSum +=   (triangle[0]-center)*(triangle[0]-center)*
+						(triangle[1]-center)*(triangle[1]-center)*
+						(triangle[2]-center)*(triangle[2]-center);
 	}
 		covarianceMatrix = (1/(3 * (float)triangles.size())) * covSum;
 		std::cout << "Covariance Matrix:\n" << glm::to_string(covarianceMatrix) << std::endl;

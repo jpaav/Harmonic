@@ -7,6 +7,8 @@
 
 #include "PhysicsObject.h"
 
+#include <utility>
+
 PhysicsObject::PhysicsObject(Camera *camera, Material *material, GLuint shader) : Object(camera, material){
 	infoShader = shader;
 	mass = 1.0;
@@ -19,7 +21,7 @@ PhysicsObject::~PhysicsObject() {
 	delete(obbTree);
 }
 
-Collision* PhysicsObject::updateCollisions(double deltaT, PhysicsObject *otherObject) {
+Collision* PhysicsObject::updateCollisions(PhysicsObject *otherObject) {
 	//TODO: change otherObject name to be less terrible
 	//Get all 15 axis of separation
 	//TODO: Make this an array for conservation
@@ -45,7 +47,7 @@ Collision* PhysicsObject::updateCollisions(double deltaT, PhysicsObject *otherOb
 	//Half dimensions
 	glm::vec3 a = B - this->obbTree->getExtrema(0);
 	glm::vec3 b = A - otherObject->obbTree->getExtrema(0);
-	for (int j = 1; j < 8; ++j) {
+	for (size_t j = 1; j < 8; ++j) {
 		a = glm::min(a, glm::abs(B - this->obbTree->getExtrema(j)));
 		b = glm::min(b, glm::abs(A - otherObject->obbTree->getExtrema(j)));
 	}
@@ -71,11 +73,9 @@ Collision* PhysicsObject::updateCollisions(double deltaT, PhysicsObject *otherOb
 		}
 	}
 	if(!disjoint) {
-		std::cout << "\n\n\nColliding!\n\n\n" << std::endl;
 		colliding = true;
 		return new Collision(this, otherObject);
 	}else {
-		std::cout << "Disjoint!" << std::endl;
 		colliding = false;
 		return nullptr;
 	}
@@ -120,7 +120,7 @@ void PhysicsObject::updateForces(double deltaT, std::vector<glm::vec3> globalFor
 	if (isPinned) { return; }
 	//Combine global and local forces
 	std::vector<glm::vec3> forces;
-	forces.push_back(combineForces(globalForces));
+	forces.push_back(combineForces(std::move(globalForces)));
 	forces.push_back(combineForces(transform.localForces));
 	//Apply forces
 	applyForce(deltaT, combineForces(forces));

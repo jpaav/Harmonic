@@ -23,9 +23,10 @@ class PhysicsObject: public Object {
 public:
 	//Constructors and Destructors
 	PhysicsObject(Camera *camera, Material *material, GLuint shader);
-	virtual ~PhysicsObject() override;
+
+	~PhysicsObject() override;
 	//Methods
-	Collision* updateCollisions(double deltaT, PhysicsObject *otherObject);
+	Collision* updateCollisions(PhysicsObject *otherObject);
 	void updateForces(double deltaT, std::vector<glm::vec3> globalForces);
 	void applyForce(double deltaT, glm::vec3 force);
 	void setMass(float mass) { this->mass = mass; }

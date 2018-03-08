@@ -14,7 +14,7 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <crtdbg.h>
-#include "stdio.h"
+#include <cstdio>
 
 //Never used
 /*void _glAssert(const char * info, int line) {

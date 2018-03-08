@@ -13,7 +13,7 @@ protected:
 	GLuint vbo;
 	GLuint shader;
 public:
-	Canvas(GLuint shader);
+	explicit Canvas(GLuint shader);
 	~Canvas();
 
 	void drawAll();

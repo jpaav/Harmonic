@@ -1,12 +1,13 @@
 #include "Texture.h"
 
+#include <utility>
 
 
 Texture::Texture(std::string path, std::string name)
 {
 	this->id = 0;
 	this->path = path;
-	this->name = name;
+	this->name = std::move(name);
 	id = SOIL_load_OGL_texture(path.c_str(),
 		SOIL_LOAD_AUTO,
 		SOIL_CREATE_NEW_ID,
