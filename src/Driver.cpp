@@ -125,20 +125,6 @@ int main(int argc, char **argv) {
 	//Binds the Viewport to the window for use during key callbacks
 	glfwSetWindowUserPointer(window, vp);
 
-
-	/*Test Ico//
-	vp->addMaterial(shader, "testMat");
-	
-	Object *box = vp->addObject("testMat");
-	box->setObjectData("C:/Users/jpaavola/Documents/Code/Harmonic/Debug/objs/IcoSphere2.obj");
-	box->setScale(2.0f, 2.0f, 2.0f);
-	//End Test Ico*/
-	
-	//Random test//
-	Color c(1.0f, 1.0f, 1.0f);
-	//End Random Test//
-
-
 	//Test Can//
 	const char *canMatName = "canMat";
 	Material* canMat = vp->addMaterial(diffuseShader, canMatName);
@@ -149,18 +135,23 @@ int main(int argc, char **argv) {
 	can->setLocation(0, 0, 0);
 	can->setRotation(0, 0, 0);
 	can->setName("Can");
+	//can->toggleDrawCenter();
+	//can->toggleDrawBBBasis();
 	//can->isPinned = true;
 	//End Test Can//
 
 	//Test Ico//
 	const char *defaultMatName = "default";
-	vp->addMaterial(shader, defaultMatName);
+	auto defaultMat = vp->addMaterial(shader, defaultMatName);
+	defaultMat->setColor(Color(0.8,0.8,0.8));
 	PhysicsObject* ico = vp->addPhysicsObject(defaultMatName);
 	ico->setObjectData("C:/Users/jpaavola/Documents/Code/Harmonic/src/objs/IcoSphere.obj");
 	ico->setLocation(0, -1, 0);
 	ico->setRotation(0,  0, 0);
 	ico->isPinned = true;
 	ico->setName("Ico");
+	ico->toggleDrawBBBasis();
+
 	//End Test Ico//
 
 	/*Ground plane//
@@ -210,6 +201,7 @@ int main(int argc, char **argv) {
 	lastFrame  = glfwGetTime();	//Should this be closer to the currentFrame call?
 
 	while (!glfwWindowShouldClose(window)) {
+
 		//Get Time
 		currentFrame = glfwGetTime();
 		vp->setDeltaTime(currentFrame - lastFrame);
@@ -249,6 +241,7 @@ int main(int argc, char **argv) {
 		if(physicsCompString.empty()) {
 			physicsCompString.append("No collisions\n");
 		}
+		physicsCompString.append(std::to_string(vp->simFrame)+"\n");
 		physicsTB->setText(physicsCompString);
 		//Draw All objects//
 		vp->drawAll();

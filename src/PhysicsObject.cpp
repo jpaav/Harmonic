@@ -10,11 +10,13 @@
 #include <utility>
 
 PhysicsObject::PhysicsObject(Camera *camera, Material *material, GLuint shader) : Object(camera, material){
-	infoShader = shader;
 	mass = 1.0;
 	isPinned = false;
 	colliding = false;
 	obbTree = nullptr;
+	this->shader = shader;
+	drawCenter = false;
+	drawBBBasis = false;
 }
 
 PhysicsObject::~PhysicsObject() {
@@ -45,12 +47,22 @@ Collision* PhysicsObject::updateCollisions(PhysicsObject *otherObject) {
 	glm::vec3 A = obbTree->getCenter();
 	glm::vec3 B = otherObject->obbTree->getCenter();
 	//Half dimensions
+	size_t index_max_a=0, index_max_b=0;
 	glm::vec3 a = B - this->obbTree->getExtrema(0);
 	glm::vec3 b = A - otherObject->obbTree->getExtrema(0);
 	for (size_t j = 1; j < 8; ++j) {
+		if(glm::min(a, glm::abs(B - this->obbTree->getExtrema(j))) != a) {
+			index_max_a = j;
+		}
+		if(glm::min(b, glm::abs(A - otherObject->obbTree->getExtrema(j))) != b) {
+			index_max_b = j;
+		}
 		a = glm::min(a, glm::abs(B - this->obbTree->getExtrema(j)));
 		b = glm::min(b, glm::abs(A - otherObject->obbTree->getExtrema(j)));
 	}
+	a = glm::abs(A - this->obbTree->getExtrema(index_max_a));
+	b = glm::abs(B - otherObject->obbTree->getExtrema(index_max_b));
+
 	//Initialize radii
 	//glm::fvec3 r_a = glm::vec3(0);
 	//glm::fvec3 r_b = glm::vec3(0);
@@ -62,6 +74,7 @@ Collision* PhysicsObject::updateCollisions(PhysicsObject *otherObject) {
 
 	for (int i = 0; i < 15; ++i) {
 		//Find r_a and r_b
+		//TODO: figure out how to get rid of these pseudo errors
 		r_a = glm::length(glm::dot(a, L[i]));
 		r_b = glm::length(glm::dot(b, L[i]));
 		distance = glm::length(glm::dot(T, L[i]));
@@ -107,7 +120,7 @@ void PhysicsObject::draw() {
 
 	// Update and Draw AABB
 	//aabb.draw(infoShader, vertices, this->transform, this->m_cam);
-	obbTree->draw(infoShader, this->transform, this->m_cam);
+	obbTree->draw(shader, this->transform, this->m_cam);
 }
 
 void PhysicsObject::setObjectData(const char *objPath) {

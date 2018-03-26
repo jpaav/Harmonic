@@ -30,6 +30,8 @@ public:
 	glm::vec3 getTrueAxis(int axisIndex);
 	glm::vec3 getExtrema(size_t index);
 	glm::vec3 getCenter();
+	glm::mat3 getBasis();
+
 private:
 	//Instance variables
 	glm::mat3 eigenVectors;

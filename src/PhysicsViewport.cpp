@@ -2,15 +2,14 @@
 
 
 
-PhysicsViewport::PhysicsViewport(GLFWwindow *window, int width, int height, Camera *camera, GLuint shader) : Viewport(window, width, height, camera)
+PhysicsViewport::PhysicsViewport(GLFWwindow *window, int width, int height, Camera *camera, GLuint shader) : Viewport(window, width, height, camera, shader)
 {
-	infoShader = shader;
 	simFrame = 0;
+	update_state = CONTINUOUS;
 }
 
-PhysicsViewport::PhysicsViewport(GLFWwindow *window, int width, int height, GLuint shader) : Viewport(window, width, height)
+PhysicsViewport::PhysicsViewport(GLFWwindow *window, int width, int height, GLuint shader) : Viewport(window, width, height, shader)
 {
-	infoShader = shader;
 	simFrame = 0;
 	update_state = CONTINUOUS;
 }
@@ -64,3 +63,5 @@ void PhysicsViewport::updatePhysics()
 
 	simFrame++;
 }
+
+long PhysicsViewport::getSimFrame() const {	return simFrame; }

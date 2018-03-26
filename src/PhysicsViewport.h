@@ -17,10 +17,12 @@ class PhysicsViewport :
 public:
 	//Public instance variables
 	std::vector<glm::vec3> globalForces;
-	GLuint infoShader;
 	std::vector<Collision*> collisions;
 	UpdateState update_state;
 	long simFrame;
+
+	long getSimFrame() const;
+
 	//Constructors and Destructors
 	PhysicsViewport(GLFWwindow *window, int width, int height, Camera *camera, GLuint shader);
 	PhysicsViewport(GLFWwindow *window, int width, int height, GLuint shader);

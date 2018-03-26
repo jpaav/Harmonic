@@ -20,6 +20,7 @@ Material::Material(GLuint shader, const char* name)
 	this->shader = shader;
 	texture = NULL;
 	this->name = name;
+	color = Color();
 }
 
 Material::~Material() {

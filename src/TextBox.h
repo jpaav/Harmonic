@@ -26,8 +26,8 @@ private:
 
 public:
 	TextBox(std::string name, int fontSize, float xPosition, float yPosition, float xScale, float yScale, float lineSpacing);
-	~TextBox() override;
-	int render(GLuint shader) override;
+	~TextBox();
+	int render(GLuint shader);
 	void setText(std::string text);
 };
 

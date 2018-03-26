@@ -15,6 +15,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <crtdbg.h>
 #include <cstdio>
+#include <glm/gtc/type_ptr.hpp>
 
 //Never used
 /*void _glAssert(const char * info, int line) {
@@ -129,8 +130,13 @@ void Object::draw(){	//CHECK WHETHER OBJECT USES UVS TO SAVE RESOURCES
 		glUniform1i(TextureLoc, 0);
 	}
 
+	GLint ColorLoc = glGetUniformLocation(m_mat->getShader(), "color");
+
 	//Send MVP to shader in uniform variable
 	glUniformMatrix4fv(MatrixLoc, 1, GL_FALSE, &MVPmatrix[0][0]);
+
+	//Send Color to shader in uniform variable
+	glUniform3fv(ColorLoc, 1, glm::value_ptr(m_mat->getColor().getRGB()));
 
 	glEnableVertexAttribArray(0);
 	//Add Vertex Position Attribute
@@ -203,8 +209,4 @@ void Object::drawEdges(){
 	glDrawArrays(GL_TRIANGLES, 0, triCount); // Starting from vertex 0; 3 vertices total -> 1 triangle
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
-}
-void Object::setMaterial(Material *m){
-	//delete m_mat;
-	m_mat = m;
 }
