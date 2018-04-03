@@ -17,6 +17,7 @@ include_directories(include/Eigen)
 link_directories(bin)
 link_directories(libs)
 set(MSVC True)
+add_subdirectory(tests)
 
 ############## CMake Project ################
 #        The main options of project        #

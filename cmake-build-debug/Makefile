@@ -55,6 +55,40 @@ CMAKE_BINARY_DIR = C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	"E:\Programs\Jetbrains\CLion 2017.3.3\bin\cmake\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	"E:\Programs\Jetbrains\CLion 2017.3.3\bin\cmake\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	"E:\Programs\Jetbrains\CLion 2017.3.3\bin\cmake\bin\cmake.exe" -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	"E:\Programs\Jetbrains\CLion 2017.3.3\bin\cmake\bin\cmake.exe" -P cmake_install.cmake
+.PHONY : install/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -76,6 +110,18 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	"E:\Programs\Jetbrains\CLion 2017.3.3\bin\cmake\bin\cmake.exe" -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	"E:\Programs\Jetbrains\CLion 2017.3.3\bin\cmake\bin\cmake.exe" -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -121,6 +167,71 @@ Harmonic: cmake_check_build_system
 Harmonic/fast:
 	$(MAKE) -f CMakeFiles\Harmonic.dir\build.make CMakeFiles/Harmonic.dir/build
 .PHONY : Harmonic/fast
+
+#=============================================================================
+# Target rules for targets named gmock_main
+
+# Build rule for target.
+gmock_main: cmake_check_build_system
+	$(MAKE) -f CMakeFiles\Makefile2 gmock_main
+.PHONY : gmock_main
+
+# fast build rule for target.
+gmock_main/fast:
+	$(MAKE) -f tests\libs\gtest-1.8.0\googlemock\CMakeFiles\gmock_main.dir\build.make tests/libs/gtest-1.8.0/googlemock/CMakeFiles/gmock_main.dir/build
+.PHONY : gmock_main/fast
+
+#=============================================================================
+# Target rules for targets named gmock
+
+# Build rule for target.
+gmock: cmake_check_build_system
+	$(MAKE) -f CMakeFiles\Makefile2 gmock
+.PHONY : gmock
+
+# fast build rule for target.
+gmock/fast:
+	$(MAKE) -f tests\libs\gtest-1.8.0\googlemock\CMakeFiles\gmock.dir\build.make tests/libs/gtest-1.8.0/googlemock/CMakeFiles/gmock.dir/build
+.PHONY : gmock/fast
+
+#=============================================================================
+# Target rules for targets named gtest
+
+# Build rule for target.
+gtest: cmake_check_build_system
+	$(MAKE) -f CMakeFiles\Makefile2 gtest
+.PHONY : gtest
+
+# fast build rule for target.
+gtest/fast:
+	$(MAKE) -f tests\libs\gtest-1.8.0\googlemock\gtest\CMakeFiles\gtest.dir\build.make tests/libs/gtest-1.8.0/googlemock/gtest/CMakeFiles/gtest.dir/build
+.PHONY : gtest/fast
+
+#=============================================================================
+# Target rules for targets named gtest_main
+
+# Build rule for target.
+gtest_main: cmake_check_build_system
+	$(MAKE) -f CMakeFiles\Makefile2 gtest_main
+.PHONY : gtest_main
+
+# fast build rule for target.
+gtest_main/fast:
+	$(MAKE) -f tests\libs\gtest-1.8.0\googlemock\gtest\CMakeFiles\gtest_main.dir\build.make tests/libs/gtest-1.8.0/googlemock/gtest/CMakeFiles/gtest_main.dir/build
+.PHONY : gtest_main/fast
+
+#=============================================================================
+# Target rules for targets named runBasicHarmonicTests
+
+# Build rule for target.
+runBasicHarmonicTests: cmake_check_build_system
+	$(MAKE) -f CMakeFiles\Makefile2 runBasicHarmonicTests
+.PHONY : runBasicHarmonicTests
+
+# fast build rule for target.
+runBasicHarmonicTests/fast:
+	$(MAKE) -f tests\basic_tests\CMakeFiles\runBasicHarmonicTests.dir\build.make tests/basic_tests/CMakeFiles/runBasicHarmonicTests.dir/build
+.PHONY : runBasicHarmonicTests/fast
 
 src/AABB.obj: src/AABB.cpp.obj
 
@@ -614,9 +725,18 @@ help:
 	@echo ... all (the default if no target is provided)
 	@echo ... clean
 	@echo ... depend
+	@echo ... list_install_components
 	@echo ... Harmonic
+	@echo ... install/local
+	@echo ... install
 	@echo ... edit_cache
 	@echo ... rebuild_cache
+	@echo ... install/strip
+	@echo ... gmock_main
+	@echo ... gmock
+	@echo ... gtest
+	@echo ... gtest_main
+	@echo ... runBasicHarmonicTests
 	@echo ... src/AABB.obj
 	@echo ... src/AABB.i
 	@echo ... src/AABB.s
