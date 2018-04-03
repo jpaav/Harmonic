@@ -136,7 +136,7 @@ int main(int argc, char **argv) {
 	can->setRotation(0, 0, 0);
 	can->setName("Can");
 	//can->toggleDrawCenter();
-	//can->toggleDrawBBBasis();
+	can->toggleDrawBBBasis();
 	//can->isPinned = true;
 	//End Test Can//
 

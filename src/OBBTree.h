@@ -21,16 +21,22 @@ typedef std::vector<glm::vec3> Triangle;
 class OBBTree {
 public:
 	//Constructors and Destructors
-	OBBTree(std::vector<glm::vec3> *vertices, Transform* transform);
+	OBBTree(std::vector<glm::vec3> *vertices, Transform* transform, bool isAABB);
 	virtual ~OBBTree();
 	//Methods
 	std::vector<Triangle> loadTriangles(std::vector<glm::vec3> vertices);
-	void findBounds(glm::mat3 basis, std::vector<glm::vec3> *vertices);
+	void findBounds(std::vector<glm::vec3> *vertices);
 	void draw(GLuint shader, Transform objTransform, Camera *camera);
 	glm::vec3 getTrueAxis(int axisIndex);
 	glm::vec3 getExtrema(size_t index);
 	glm::vec3 getCenter();
 	glm::mat3 getBasis();
+	glm::vec3 getMaxes();
+	glm::vec3 getMins();
+
+	//TODO: this is really janky...
+	std::vector<glm::vec3> basis;
+	bool isAABB;
 
 private:
 	//Instance variables

@@ -131,10 +131,35 @@ CMakeFiles/Harmonic.dir/src/Canvas.cpp.obj.provides: CMakeFiles/Harmonic.dir/src
 CMakeFiles/Harmonic.dir/src/Canvas.cpp.obj.provides.build: CMakeFiles/Harmonic.dir/src/Canvas.cpp.obj
 
 
+CMakeFiles/Harmonic.dir/src/Collision.cpp.obj: CMakeFiles/Harmonic.dir/flags.make
+CMakeFiles/Harmonic.dir/src/Collision.cpp.obj: CMakeFiles/Harmonic.dir/includes_CXX.rsp
+CMakeFiles/Harmonic.dir/src/Collision.cpp.obj: ../src/Collision.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Harmonic.dir/src/Collision.cpp.obj"
+	E:\Programs\MinGW\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Harmonic.dir\src\Collision.cpp.obj -c C:\Users\jpaavola\Documents\Code\Harmonic\src\Collision.cpp
+
+CMakeFiles/Harmonic.dir/src/Collision.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Harmonic.dir/src/Collision.cpp.i"
+	E:\Programs\MinGW\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\jpaavola\Documents\Code\Harmonic\src\Collision.cpp > CMakeFiles\Harmonic.dir\src\Collision.cpp.i
+
+CMakeFiles/Harmonic.dir/src/Collision.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Harmonic.dir/src/Collision.cpp.s"
+	E:\Programs\MinGW\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\jpaavola\Documents\Code\Harmonic\src\Collision.cpp -o CMakeFiles\Harmonic.dir\src\Collision.cpp.s
+
+CMakeFiles/Harmonic.dir/src/Collision.cpp.obj.requires:
+
+.PHONY : CMakeFiles/Harmonic.dir/src/Collision.cpp.obj.requires
+
+CMakeFiles/Harmonic.dir/src/Collision.cpp.obj.provides: CMakeFiles/Harmonic.dir/src/Collision.cpp.obj.requires
+	$(MAKE) -f CMakeFiles\Harmonic.dir\build.make CMakeFiles/Harmonic.dir/src/Collision.cpp.obj.provides.build
+.PHONY : CMakeFiles/Harmonic.dir/src/Collision.cpp.obj.provides
+
+CMakeFiles/Harmonic.dir/src/Collision.cpp.obj.provides.build: CMakeFiles/Harmonic.dir/src/Collision.cpp.obj
+
+
 CMakeFiles/Harmonic.dir/src/Color.cpp.obj: CMakeFiles/Harmonic.dir/flags.make
 CMakeFiles/Harmonic.dir/src/Color.cpp.obj: CMakeFiles/Harmonic.dir/includes_CXX.rsp
 CMakeFiles/Harmonic.dir/src/Color.cpp.obj: ../src/Color.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Harmonic.dir/src/Color.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Harmonic.dir/src/Color.cpp.obj"
 	E:\Programs\MinGW\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Harmonic.dir\src\Color.cpp.obj -c C:\Users\jpaavola\Documents\Code\Harmonic\src\Color.cpp
 
 CMakeFiles/Harmonic.dir/src/Color.cpp.i: cmake_force
@@ -159,7 +184,7 @@ CMakeFiles/Harmonic.dir/src/Color.cpp.obj.provides.build: CMakeFiles/Harmonic.di
 CMakeFiles/Harmonic.dir/src/Driver.cpp.obj: CMakeFiles/Harmonic.dir/flags.make
 CMakeFiles/Harmonic.dir/src/Driver.cpp.obj: CMakeFiles/Harmonic.dir/includes_CXX.rsp
 CMakeFiles/Harmonic.dir/src/Driver.cpp.obj: ../src/Driver.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Harmonic.dir/src/Driver.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Harmonic.dir/src/Driver.cpp.obj"
 	E:\Programs\MinGW\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Harmonic.dir\src\Driver.cpp.obj -c C:\Users\jpaavola\Documents\Code\Harmonic\src\Driver.cpp
 
 CMakeFiles/Harmonic.dir/src/Driver.cpp.i: cmake_force
@@ -184,7 +209,7 @@ CMakeFiles/Harmonic.dir/src/Driver.cpp.obj.provides.build: CMakeFiles/Harmonic.d
 CMakeFiles/Harmonic.dir/src/GLFunctions.cpp.obj: CMakeFiles/Harmonic.dir/flags.make
 CMakeFiles/Harmonic.dir/src/GLFunctions.cpp.obj: CMakeFiles/Harmonic.dir/includes_CXX.rsp
 CMakeFiles/Harmonic.dir/src/GLFunctions.cpp.obj: ../src/GLFunctions.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Harmonic.dir/src/GLFunctions.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Harmonic.dir/src/GLFunctions.cpp.obj"
 	E:\Programs\MinGW\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Harmonic.dir\src\GLFunctions.cpp.obj -c C:\Users\jpaavola\Documents\Code\Harmonic\src\GLFunctions.cpp
 
 CMakeFiles/Harmonic.dir/src/GLFunctions.cpp.i: cmake_force
@@ -209,7 +234,7 @@ CMakeFiles/Harmonic.dir/src/GLFunctions.cpp.obj.provides.build: CMakeFiles/Harmo
 CMakeFiles/Harmonic.dir/src/Material.cpp.obj: CMakeFiles/Harmonic.dir/flags.make
 CMakeFiles/Harmonic.dir/src/Material.cpp.obj: CMakeFiles/Harmonic.dir/includes_CXX.rsp
 CMakeFiles/Harmonic.dir/src/Material.cpp.obj: ../src/Material.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Harmonic.dir/src/Material.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/Harmonic.dir/src/Material.cpp.obj"
 	E:\Programs\MinGW\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Harmonic.dir\src\Material.cpp.obj -c C:\Users\jpaavola\Documents\Code\Harmonic\src\Material.cpp
 
 CMakeFiles/Harmonic.dir/src/Material.cpp.i: cmake_force
@@ -231,10 +256,35 @@ CMakeFiles/Harmonic.dir/src/Material.cpp.obj.provides: CMakeFiles/Harmonic.dir/s
 CMakeFiles/Harmonic.dir/src/Material.cpp.obj.provides.build: CMakeFiles/Harmonic.dir/src/Material.cpp.obj
 
 
+CMakeFiles/Harmonic.dir/src/OBBTree.cpp.obj: CMakeFiles/Harmonic.dir/flags.make
+CMakeFiles/Harmonic.dir/src/OBBTree.cpp.obj: CMakeFiles/Harmonic.dir/includes_CXX.rsp
+CMakeFiles/Harmonic.dir/src/OBBTree.cpp.obj: ../src/OBBTree.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Harmonic.dir/src/OBBTree.cpp.obj"
+	E:\Programs\MinGW\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Harmonic.dir\src\OBBTree.cpp.obj -c C:\Users\jpaavola\Documents\Code\Harmonic\src\OBBTree.cpp
+
+CMakeFiles/Harmonic.dir/src/OBBTree.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Harmonic.dir/src/OBBTree.cpp.i"
+	E:\Programs\MinGW\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\jpaavola\Documents\Code\Harmonic\src\OBBTree.cpp > CMakeFiles\Harmonic.dir\src\OBBTree.cpp.i
+
+CMakeFiles/Harmonic.dir/src/OBBTree.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Harmonic.dir/src/OBBTree.cpp.s"
+	E:\Programs\MinGW\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\jpaavola\Documents\Code\Harmonic\src\OBBTree.cpp -o CMakeFiles\Harmonic.dir\src\OBBTree.cpp.s
+
+CMakeFiles/Harmonic.dir/src/OBBTree.cpp.obj.requires:
+
+.PHONY : CMakeFiles/Harmonic.dir/src/OBBTree.cpp.obj.requires
+
+CMakeFiles/Harmonic.dir/src/OBBTree.cpp.obj.provides: CMakeFiles/Harmonic.dir/src/OBBTree.cpp.obj.requires
+	$(MAKE) -f CMakeFiles\Harmonic.dir\build.make CMakeFiles/Harmonic.dir/src/OBBTree.cpp.obj.provides.build
+.PHONY : CMakeFiles/Harmonic.dir/src/OBBTree.cpp.obj.provides
+
+CMakeFiles/Harmonic.dir/src/OBBTree.cpp.obj.provides.build: CMakeFiles/Harmonic.dir/src/OBBTree.cpp.obj
+
+
 CMakeFiles/Harmonic.dir/src/Object.cpp.obj: CMakeFiles/Harmonic.dir/flags.make
 CMakeFiles/Harmonic.dir/src/Object.cpp.obj: CMakeFiles/Harmonic.dir/includes_CXX.rsp
 CMakeFiles/Harmonic.dir/src/Object.cpp.obj: ../src/Object.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/Harmonic.dir/src/Object.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/Harmonic.dir/src/Object.cpp.obj"
 	E:\Programs\MinGW\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Harmonic.dir\src\Object.cpp.obj -c C:\Users\jpaavola\Documents\Code\Harmonic\src\Object.cpp
 
 CMakeFiles/Harmonic.dir/src/Object.cpp.i: cmake_force
@@ -259,7 +309,7 @@ CMakeFiles/Harmonic.dir/src/Object.cpp.obj.provides.build: CMakeFiles/Harmonic.d
 CMakeFiles/Harmonic.dir/src/PhysicsObject.cpp.obj: CMakeFiles/Harmonic.dir/flags.make
 CMakeFiles/Harmonic.dir/src/PhysicsObject.cpp.obj: CMakeFiles/Harmonic.dir/includes_CXX.rsp
 CMakeFiles/Harmonic.dir/src/PhysicsObject.cpp.obj: ../src/PhysicsObject.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Harmonic.dir/src/PhysicsObject.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/Harmonic.dir/src/PhysicsObject.cpp.obj"
 	E:\Programs\MinGW\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Harmonic.dir\src\PhysicsObject.cpp.obj -c C:\Users\jpaavola\Documents\Code\Harmonic\src\PhysicsObject.cpp
 
 CMakeFiles/Harmonic.dir/src/PhysicsObject.cpp.i: cmake_force
@@ -284,7 +334,7 @@ CMakeFiles/Harmonic.dir/src/PhysicsObject.cpp.obj.provides.build: CMakeFiles/Har
 CMakeFiles/Harmonic.dir/src/PhysicsViewport.cpp.obj: CMakeFiles/Harmonic.dir/flags.make
 CMakeFiles/Harmonic.dir/src/PhysicsViewport.cpp.obj: CMakeFiles/Harmonic.dir/includes_CXX.rsp
 CMakeFiles/Harmonic.dir/src/PhysicsViewport.cpp.obj: ../src/PhysicsViewport.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/Harmonic.dir/src/PhysicsViewport.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/Harmonic.dir/src/PhysicsViewport.cpp.obj"
 	E:\Programs\MinGW\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Harmonic.dir\src\PhysicsViewport.cpp.obj -c C:\Users\jpaavola\Documents\Code\Harmonic\src\PhysicsViewport.cpp
 
 CMakeFiles/Harmonic.dir/src/PhysicsViewport.cpp.i: cmake_force
@@ -309,7 +359,7 @@ CMakeFiles/Harmonic.dir/src/PhysicsViewport.cpp.obj.provides.build: CMakeFiles/H
 CMakeFiles/Harmonic.dir/src/TextBox.cpp.obj: CMakeFiles/Harmonic.dir/flags.make
 CMakeFiles/Harmonic.dir/src/TextBox.cpp.obj: CMakeFiles/Harmonic.dir/includes_CXX.rsp
 CMakeFiles/Harmonic.dir/src/TextBox.cpp.obj: ../src/TextBox.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/Harmonic.dir/src/TextBox.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/Harmonic.dir/src/TextBox.cpp.obj"
 	E:\Programs\MinGW\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Harmonic.dir\src\TextBox.cpp.obj -c C:\Users\jpaavola\Documents\Code\Harmonic\src\TextBox.cpp
 
 CMakeFiles/Harmonic.dir/src/TextBox.cpp.i: cmake_force
@@ -334,7 +384,7 @@ CMakeFiles/Harmonic.dir/src/TextBox.cpp.obj.provides.build: CMakeFiles/Harmonic.
 CMakeFiles/Harmonic.dir/src/Texture.cpp.obj: CMakeFiles/Harmonic.dir/flags.make
 CMakeFiles/Harmonic.dir/src/Texture.cpp.obj: CMakeFiles/Harmonic.dir/includes_CXX.rsp
 CMakeFiles/Harmonic.dir/src/Texture.cpp.obj: ../src/Texture.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/Harmonic.dir/src/Texture.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/Harmonic.dir/src/Texture.cpp.obj"
 	E:\Programs\MinGW\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Harmonic.dir\src\Texture.cpp.obj -c C:\Users\jpaavola\Documents\Code\Harmonic\src\Texture.cpp
 
 CMakeFiles/Harmonic.dir/src/Texture.cpp.i: cmake_force
@@ -359,7 +409,7 @@ CMakeFiles/Harmonic.dir/src/Texture.cpp.obj.provides.build: CMakeFiles/Harmonic.
 CMakeFiles/Harmonic.dir/src/Transform.cpp.obj: CMakeFiles/Harmonic.dir/flags.make
 CMakeFiles/Harmonic.dir/src/Transform.cpp.obj: CMakeFiles/Harmonic.dir/includes_CXX.rsp
 CMakeFiles/Harmonic.dir/src/Transform.cpp.obj: ../src/Transform.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/Harmonic.dir/src/Transform.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/Harmonic.dir/src/Transform.cpp.obj"
 	E:\Programs\MinGW\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Harmonic.dir\src\Transform.cpp.obj -c C:\Users\jpaavola\Documents\Code\Harmonic\src\Transform.cpp
 
 CMakeFiles/Harmonic.dir/src/Transform.cpp.i: cmake_force
@@ -384,7 +434,7 @@ CMakeFiles/Harmonic.dir/src/Transform.cpp.obj.provides.build: CMakeFiles/Harmoni
 CMakeFiles/Harmonic.dir/src/UIElement.cpp.obj: CMakeFiles/Harmonic.dir/flags.make
 CMakeFiles/Harmonic.dir/src/UIElement.cpp.obj: CMakeFiles/Harmonic.dir/includes_CXX.rsp
 CMakeFiles/Harmonic.dir/src/UIElement.cpp.obj: ../src/UIElement.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/Harmonic.dir/src/UIElement.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/Harmonic.dir/src/UIElement.cpp.obj"
 	E:\Programs\MinGW\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Harmonic.dir\src\UIElement.cpp.obj -c C:\Users\jpaavola\Documents\Code\Harmonic\src\UIElement.cpp
 
 CMakeFiles/Harmonic.dir/src/UIElement.cpp.i: cmake_force
@@ -409,7 +459,7 @@ CMakeFiles/Harmonic.dir/src/UIElement.cpp.obj.provides.build: CMakeFiles/Harmoni
 CMakeFiles/Harmonic.dir/src/Vector3.cpp.obj: CMakeFiles/Harmonic.dir/flags.make
 CMakeFiles/Harmonic.dir/src/Vector3.cpp.obj: CMakeFiles/Harmonic.dir/includes_CXX.rsp
 CMakeFiles/Harmonic.dir/src/Vector3.cpp.obj: ../src/Vector3.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/Harmonic.dir/src/Vector3.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/Harmonic.dir/src/Vector3.cpp.obj"
 	E:\Programs\MinGW\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Harmonic.dir\src\Vector3.cpp.obj -c C:\Users\jpaavola\Documents\Code\Harmonic\src\Vector3.cpp
 
 CMakeFiles/Harmonic.dir/src/Vector3.cpp.i: cmake_force
@@ -434,7 +484,7 @@ CMakeFiles/Harmonic.dir/src/Vector3.cpp.obj.provides.build: CMakeFiles/Harmonic.
 CMakeFiles/Harmonic.dir/src/Viewport.cpp.obj: CMakeFiles/Harmonic.dir/flags.make
 CMakeFiles/Harmonic.dir/src/Viewport.cpp.obj: CMakeFiles/Harmonic.dir/includes_CXX.rsp
 CMakeFiles/Harmonic.dir/src/Viewport.cpp.obj: ../src/Viewport.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/Harmonic.dir/src/Viewport.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/Harmonic.dir/src/Viewport.cpp.obj"
 	E:\Programs\MinGW\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Harmonic.dir\src\Viewport.cpp.obj -c C:\Users\jpaavola\Documents\Code\Harmonic\src\Viewport.cpp
 
 CMakeFiles/Harmonic.dir/src/Viewport.cpp.i: cmake_force
@@ -461,10 +511,12 @@ Harmonic_OBJECTS = \
 "CMakeFiles/Harmonic.dir/src/AABB.cpp.obj" \
 "CMakeFiles/Harmonic.dir/src/Camera.cpp.obj" \
 "CMakeFiles/Harmonic.dir/src/Canvas.cpp.obj" \
+"CMakeFiles/Harmonic.dir/src/Collision.cpp.obj" \
 "CMakeFiles/Harmonic.dir/src/Color.cpp.obj" \
 "CMakeFiles/Harmonic.dir/src/Driver.cpp.obj" \
 "CMakeFiles/Harmonic.dir/src/GLFunctions.cpp.obj" \
 "CMakeFiles/Harmonic.dir/src/Material.cpp.obj" \
+"CMakeFiles/Harmonic.dir/src/OBBTree.cpp.obj" \
 "CMakeFiles/Harmonic.dir/src/Object.cpp.obj" \
 "CMakeFiles/Harmonic.dir/src/PhysicsObject.cpp.obj" \
 "CMakeFiles/Harmonic.dir/src/PhysicsViewport.cpp.obj" \
@@ -481,10 +533,12 @@ Harmonic_EXTERNAL_OBJECTS =
 Harmonic.exe: CMakeFiles/Harmonic.dir/src/AABB.cpp.obj
 Harmonic.exe: CMakeFiles/Harmonic.dir/src/Camera.cpp.obj
 Harmonic.exe: CMakeFiles/Harmonic.dir/src/Canvas.cpp.obj
+Harmonic.exe: CMakeFiles/Harmonic.dir/src/Collision.cpp.obj
 Harmonic.exe: CMakeFiles/Harmonic.dir/src/Color.cpp.obj
 Harmonic.exe: CMakeFiles/Harmonic.dir/src/Driver.cpp.obj
 Harmonic.exe: CMakeFiles/Harmonic.dir/src/GLFunctions.cpp.obj
 Harmonic.exe: CMakeFiles/Harmonic.dir/src/Material.cpp.obj
+Harmonic.exe: CMakeFiles/Harmonic.dir/src/OBBTree.cpp.obj
 Harmonic.exe: CMakeFiles/Harmonic.dir/src/Object.cpp.obj
 Harmonic.exe: CMakeFiles/Harmonic.dir/src/PhysicsObject.cpp.obj
 Harmonic.exe: CMakeFiles/Harmonic.dir/src/PhysicsViewport.cpp.obj
@@ -498,7 +552,7 @@ Harmonic.exe: CMakeFiles/Harmonic.dir/build.make
 Harmonic.exe: CMakeFiles/Harmonic.dir/linklibs.rsp
 Harmonic.exe: CMakeFiles/Harmonic.dir/objects1.rsp
 Harmonic.exe: CMakeFiles/Harmonic.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Linking CXX executable Harmonic.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\jpaavola\Documents\Code\Harmonic\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Linking CXX executable Harmonic.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\Harmonic.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -509,10 +563,12 @@ CMakeFiles/Harmonic.dir/build: Harmonic.exe
 CMakeFiles/Harmonic.dir/requires: CMakeFiles/Harmonic.dir/src/AABB.cpp.obj.requires
 CMakeFiles/Harmonic.dir/requires: CMakeFiles/Harmonic.dir/src/Camera.cpp.obj.requires
 CMakeFiles/Harmonic.dir/requires: CMakeFiles/Harmonic.dir/src/Canvas.cpp.obj.requires
+CMakeFiles/Harmonic.dir/requires: CMakeFiles/Harmonic.dir/src/Collision.cpp.obj.requires
 CMakeFiles/Harmonic.dir/requires: CMakeFiles/Harmonic.dir/src/Color.cpp.obj.requires
 CMakeFiles/Harmonic.dir/requires: CMakeFiles/Harmonic.dir/src/Driver.cpp.obj.requires
 CMakeFiles/Harmonic.dir/requires: CMakeFiles/Harmonic.dir/src/GLFunctions.cpp.obj.requires
 CMakeFiles/Harmonic.dir/requires: CMakeFiles/Harmonic.dir/src/Material.cpp.obj.requires
+CMakeFiles/Harmonic.dir/requires: CMakeFiles/Harmonic.dir/src/OBBTree.cpp.obj.requires
 CMakeFiles/Harmonic.dir/requires: CMakeFiles/Harmonic.dir/src/Object.cpp.obj.requires
 CMakeFiles/Harmonic.dir/requires: CMakeFiles/Harmonic.dir/src/PhysicsObject.cpp.obj.requires
 CMakeFiles/Harmonic.dir/requires: CMakeFiles/Harmonic.dir/src/PhysicsViewport.cpp.obj.requires

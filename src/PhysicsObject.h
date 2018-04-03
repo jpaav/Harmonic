@@ -38,7 +38,8 @@ public:
 		if(drawCenter) { points.push_back(obbTree->getCenter()); }
 		if(drawBBBasis){
 			glm::vec3 center = obbTree->getCenter();
-			glm::mat3 basis = obbTree->getBasis();
+			auto basis = obbTree->getBasis();
+			//auto basis = obbTree->basis;
 			lines.push_back(basis*glm::vec3(center.x, center.y-pointSize, center.z));
 			lines.push_back(basis*glm::vec3(center.x, center.y+pointSize, center.z));
 			lines.push_back(basis*glm::vec3(center.x-pointSize, center.y, center.z));

@@ -7,10 +7,12 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "C:/Users/jpaavola/Documents/Code/Harmonic/src/AABB.cpp" "C:/Users/jpaavola/Documents/Code/Harmonic/cmake-build-debug/CMakeFiles/Harmonic.dir/src/AABB.cpp.obj"
   "C:/Users/jpaavola/Documents/Code/Harmonic/src/Camera.cpp" "C:/Users/jpaavola/Documents/Code/Harmonic/cmake-build-debug/CMakeFiles/Harmonic.dir/src/Camera.cpp.obj"
   "C:/Users/jpaavola/Documents/Code/Harmonic/src/Canvas.cpp" "C:/Users/jpaavola/Documents/Code/Harmonic/cmake-build-debug/CMakeFiles/Harmonic.dir/src/Canvas.cpp.obj"
+  "C:/Users/jpaavola/Documents/Code/Harmonic/src/Collision.cpp" "C:/Users/jpaavola/Documents/Code/Harmonic/cmake-build-debug/CMakeFiles/Harmonic.dir/src/Collision.cpp.obj"
   "C:/Users/jpaavola/Documents/Code/Harmonic/src/Color.cpp" "C:/Users/jpaavola/Documents/Code/Harmonic/cmake-build-debug/CMakeFiles/Harmonic.dir/src/Color.cpp.obj"
   "C:/Users/jpaavola/Documents/Code/Harmonic/src/Driver.cpp" "C:/Users/jpaavola/Documents/Code/Harmonic/cmake-build-debug/CMakeFiles/Harmonic.dir/src/Driver.cpp.obj"
   "C:/Users/jpaavola/Documents/Code/Harmonic/src/GLFunctions.cpp" "C:/Users/jpaavola/Documents/Code/Harmonic/cmake-build-debug/CMakeFiles/Harmonic.dir/src/GLFunctions.cpp.obj"
   "C:/Users/jpaavola/Documents/Code/Harmonic/src/Material.cpp" "C:/Users/jpaavola/Documents/Code/Harmonic/cmake-build-debug/CMakeFiles/Harmonic.dir/src/Material.cpp.obj"
+  "C:/Users/jpaavola/Documents/Code/Harmonic/src/OBBTree.cpp" "C:/Users/jpaavola/Documents/Code/Harmonic/cmake-build-debug/CMakeFiles/Harmonic.dir/src/OBBTree.cpp.obj"
   "C:/Users/jpaavola/Documents/Code/Harmonic/src/Object.cpp" "C:/Users/jpaavola/Documents/Code/Harmonic/cmake-build-debug/CMakeFiles/Harmonic.dir/src/Object.cpp.obj"
   "C:/Users/jpaavola/Documents/Code/Harmonic/src/PhysicsObject.cpp" "C:/Users/jpaavola/Documents/Code/Harmonic/cmake-build-debug/CMakeFiles/Harmonic.dir/src/PhysicsObject.cpp.obj"
   "C:/Users/jpaavola/Documents/Code/Harmonic/src/PhysicsViewport.cpp" "C:/Users/jpaavola/Documents/Code/Harmonic/cmake-build-debug/CMakeFiles/Harmonic.dir/src/PhysicsViewport.cpp.obj"
@@ -33,6 +35,7 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../include"
+  "../include/Eigen"
   )
 
 # Targets to which this target links.

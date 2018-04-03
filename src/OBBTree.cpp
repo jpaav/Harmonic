@@ -7,9 +7,11 @@
 
 
 
-OBBTree::OBBTree(std::vector<glm::vec3> *vertices, Transform* transform) {
+OBBTree::OBBTree(std::vector<glm::vec3> *vertices, Transform* transform, bool isAABB) {
 
 	this->transform = transform;
+
+	this->isAABB = isAABB;
 
 	std::vector<Triangle> triangles = loadTriangles(*vertices);
 	if(!triangles.empty()){
@@ -20,57 +22,59 @@ OBBTree::OBBTree(std::vector<glm::vec3> *vertices, Transform* transform) {
 		}
 		center = (1/(3 * (float)triangles.size())) * mean;
 		std::cout << "Mean point:\n" << glm::to_string(center) << std::endl;
-		//Covariance matrix
-		glm::mat3 covSum = glm::mat3();
 
-		glm::vec3 p, q, r;
-		for (int i = 0; i < 3; i++)
-			for (int j = 0; j < 3; j++) {
-				covarianceMatrix[i][j] = 0.0;
-				for (int k = 0; k < vertices->size(); k++)
-					covarianceMatrix[i][j] += (mean[i] - vertices->at(k)[i]) *
-					                          (mean[j] - vertices->at(k)[j]);
-				covarianceMatrix[i][j] /= vertices->size() - 1;
+		if(!isAABB) {
+			//Covariance matrix
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					covarianceMatrix[i][j] = 0.0;
+					for (auto &vertex : *vertices) {
+						covarianceMatrix[i][j] += (vertex[i] - mean[i]) * (vertex[j] - mean[j]);
+					}
+					covarianceMatrix[i][j] /= vertices->size();
+				}
 			}
-		/*for (auto &triangle : triangles) {
-			/*covSum +=   (triangle[0]-center)*(triangle[0]-center)*
-						(triangle[1]-center)*(triangle[1]-center)*
-						(triangle[2]-center)*(triangle[2]-center);*/
-			/*covSum +=   p[0]*p[0] + p[1]*p[1] + p[2]*p[2] + p[0]*p[1] + p[0]*p[2] + p[1]*p[2] +
-						q[0]*q[0] + q[1]*q[1] + q[2]*q[2] + q[0]*q[1] + q[0]*q[2] + q[1]*q[2] +
-						r[0]*r[0] + r[1]*r[1] + r[2]*r[2] + r[0]*r[1] + r[0]*r[2] + r[1]*r[2];
-			covSum += (triangle[0].x-center.x)*(triangle[0].y-center.y)*(triangle[0].z-center.z)
-					+ (triangle[1].x-center.x)*(triangle[1].y-center.y)*(triangle[1].z-center.z)
-					+ (triangle[2].x-center.x)*(triangle[2].y-center.y)*(triangle[2].z-center.z);
-		}*/
-		covarianceMatrix = (1/(3 * (float)triangles.size())) * covSum;
-		//Using Eigen
-		//MatrixXd centered = mat.rowwise() - mat.colwise().mean();
-		//MatrixXd cov = (centered.adjoint() * centered) / double(mat.rows() - 1);
-		std::cout << "Covariance Matrix:\n" << glm::to_string(covarianceMatrix) << std::endl;
 
-		//Get Eigenvectors from covarianceMatrix
-		Eigen::Matrix3f covarianceMatrix_Eigen;
-		covarianceMatrix_Eigen << covarianceMatrix[0][0], covarianceMatrix[0][1], covarianceMatrix[0][2],
-				covarianceMatrix[1][0], covarianceMatrix[1][1], covarianceMatrix[1][2],
-				covarianceMatrix[2][0], covarianceMatrix[2][1], covarianceMatrix[2][2];
-		Eigen::EigenSolver<Eigen::Matrix3f> es(covarianceMatrix_Eigen);
-		Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", "[", "]");
-		std::cout << "Eigenvectors from Covariance Matrix:\n" << es.eigenvectors().format(CleanFmt) << std::endl;
-		//Convert to glm::mat3
-		eigenVectors = glm::mat3(
-				es.eigenvectors().col(0)[0].real(), es.eigenvectors().col(0)[1].real(), es.eigenvectors().col(0)[2].real(),
-				es.eigenvectors().col(1)[0].real(), es.eigenvectors().col(1)[1].real(), es.eigenvectors().col(1)[2].real(),
-				es.eigenvectors().col(2)[0].real(), es.eigenvectors().col(2)[1].real(), es.eigenvectors().col(2)[2].real()
-		);
+			//Using Eigen
+			//MatrixXd centered = mat.rowwise() - mat.colwise().mean();
+			//MatrixXd cov = (centered.adjoint() * centered) / double(mat.rows() - 1);
+			std::cout << "Covariance Matrix:\n" << glm::to_string(covarianceMatrix) << std::endl;
 
-		std::cout << "Eigenvectors Matrix:\n" << glm::to_string(eigenVectors) <<  std::endl;
+			//Get Eigenvectors from covarianceMatrix
+			Eigen::Matrix3f covarianceMatrix_Eigen;
+			covarianceMatrix_Eigen << covarianceMatrix[0][0], covarianceMatrix[0][1], covarianceMatrix[0][2],
+					covarianceMatrix[1][0], covarianceMatrix[1][1], covarianceMatrix[1][2],
+					covarianceMatrix[2][0], covarianceMatrix[2][1], covarianceMatrix[2][2];
+			Eigen::EigenSolver<Eigen::Matrix3f> es(covarianceMatrix_Eigen);
+			Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", "[", "]");
+			std::cout << "Eigenvectors from Covariance Matrix:\n" << es.eigenvectors().format(CleanFmt) << std::endl;
+			//Convert to glm::mat3
+			eigenVectors = glm::mat3(
+					es.eigenvectors().col(0)[0].real(), es.eigenvectors().col(0)[1].real(),
+					es.eigenvectors().col(0)[2].real(),
+					es.eigenvectors().col(1)[0].real(), es.eigenvectors().col(1)[1].real(),
+					es.eigenvectors().col(1)[2].real(),
+					es.eigenvectors().col(2)[0].real(), es.eigenvectors().col(2)[1].real(),
+					es.eigenvectors().col(2)[2].real()
+			);
+
+			std::cout << "Eigenvectors Matrix:\n" << glm::to_string(eigenVectors) << std::endl;
+
+			basis.push_back(glm::normalize(glm::fvec3(glm::column(eigenVectors, glm::length_t(0)))));
+			basis.push_back(glm::normalize(glm::fvec3(glm::column(eigenVectors, glm::length_t(1)))));
+			basis.push_back(glm::normalize(glm::fvec3(glm::column(eigenVectors, glm::length_t(2)))));
+		}
+		else {
+			basis.emplace_back(1,0,0);
+			basis.emplace_back(0,1,0);
+			basis.emplace_back(0,0,1);
+		}
 
 	} else{
 		std::cout << "loadTriangles did not return any Triangles." << std::endl;
 	}
 	// Get bounds
-	findBounds(eigenVectors, vertices);
+	findBounds(vertices);
 
 
 	// Setup vertex buffer
@@ -146,56 +150,62 @@ void OBBTree::draw(GLuint shader, Transform objTransform, Camera *camera){
  * @param vertices
  * @return void
  */
-void OBBTree::findBounds(glm::mat3 basis, std::vector<glm::vec3> *vertices) {
+void OBBTree::findBounds(std::vector<glm::vec3> *vertices) {
 	if(vertices->size() < 3){   //Check that the size is compatible
 		return;
 	}
 	//Declaration
 	float x_pos, y_pos, z_pos, x_b_pos, y_b_pos, z_b_pos;
 	float x_neg, y_neg, z_neg, x_b_neg, y_b_neg, z_b_neg;
-	glm::vec3 temp_b;
+	float temp_bx, temp_by, temp_bz;
 	glm::vec3 vertex;
+	//std::cout << "i_hat: " << glm::to_string(i_hat) << "k_hat: " << glm::to_string(k_hat) << "j_hat: " << glm::to_string(j_hat) << std::endl;
+
 	//Initialization
 	vertex = (*vertices)[0];
-	temp_b = basis * vertex;
+	temp_bx = glm::dot(basis[0], vertex)/glm::length(basis[0]);
+	temp_by = glm::dot(basis[1], vertex)/glm::length(basis[1]);
+	temp_bz = glm::dot(basis[2], vertex)/glm::length(basis[2]);
 	x_pos = vertex.x;
 	y_pos = vertex.y;
 	z_pos = vertex.z;
 	x_neg = vertex.x;
 	y_neg = vertex.y;
 	z_neg = vertex.z;
-	x_b_pos = temp_b.x;
-	y_b_pos = temp_b.y;
-	z_b_pos = temp_b.z;
-	x_b_neg = temp_b.x;
-	y_b_neg = temp_b.y;
-	z_b_neg = temp_b.z;
+	x_b_pos = temp_bx;
+	y_b_pos = temp_by;
+	z_b_pos = temp_bz;
+	x_b_neg = temp_bx;
+	y_b_neg = temp_by;
+	z_b_neg = temp_bz;
 	//Find extrema
 	for (int i=1; i < (*vertices).size(); i++) {
 		vertex = (*vertices)[i];
-		temp_b = basis * vertex;
-		if(x_b_pos < temp_b.x) {
-			x_b_pos = temp_b.x;
+		temp_bx = glm::dot(basis[0], vertex)/glm::length(basis[0]);
+		temp_by = glm::dot(basis[1], vertex)/glm::length(basis[1]);
+		temp_bz = glm::dot(basis[2], vertex)/glm::length(basis[2]);
+		if(x_b_pos < temp_bx) {
+			x_b_pos = temp_bx;
 			x_pos = vertex.x;
 		}
-		if(x_b_neg > temp_b.x) {
-			x_b_neg = temp_b.x;
+		if(x_b_neg > temp_bx) {
+			x_b_neg = temp_bx;
 			x_neg = vertex.x;
 		}
-		if(y_b_pos < temp_b.y) {
-			y_b_pos = temp_b.y;
+		if(y_b_pos < temp_by) {
+			y_b_pos = temp_by;
 			y_pos = vertex.y;
 		}
-		if(y_b_neg > temp_b.y) {
-			y_b_neg = temp_b.y;
+		if(y_b_neg > temp_by) {
+			y_b_neg = temp_by;
 			y_neg = vertex.y;
 		}
-		if(z_b_pos < temp_b.z) {
-			z_b_pos = temp_b.z;
+		if(z_b_pos < temp_bz) {
+			z_b_pos = temp_bz;
 			z_pos = vertex.z;
 		}
-		if(z_b_neg > temp_b.z) {
-			z_b_neg = temp_b.z;
+		if(z_b_neg > temp_bz) {
+			z_b_neg = temp_bz;
 			z_neg = vertex.z;
 		}
 	}
@@ -274,4 +284,12 @@ glm::vec3 OBBTree::getTrueAxis(int axisIndex) {
 
 glm::mat3 OBBTree::getBasis() {
 	return glm::mat3(glm::translate(transform->position) * glm::toMat4(transform->rotation) * glm::scale(transform->scale) * glm::mat4(eigenVectors));
+}
+
+glm::vec3 OBBTree::getMaxes() {
+	return extrema[6];
+}
+
+glm::vec3 OBBTree::getMins() {
+	return extrema[1];
 }

@@ -203,6 +203,33 @@ src/Canvas.cpp.s:
 	$(MAKE) -f CMakeFiles\Harmonic.dir\build.make CMakeFiles/Harmonic.dir/src/Canvas.cpp.s
 .PHONY : src/Canvas.cpp.s
 
+src/Collision.obj: src/Collision.cpp.obj
+
+.PHONY : src/Collision.obj
+
+# target to build an object file
+src/Collision.cpp.obj:
+	$(MAKE) -f CMakeFiles\Harmonic.dir\build.make CMakeFiles/Harmonic.dir/src/Collision.cpp.obj
+.PHONY : src/Collision.cpp.obj
+
+src/Collision.i: src/Collision.cpp.i
+
+.PHONY : src/Collision.i
+
+# target to preprocess a source file
+src/Collision.cpp.i:
+	$(MAKE) -f CMakeFiles\Harmonic.dir\build.make CMakeFiles/Harmonic.dir/src/Collision.cpp.i
+.PHONY : src/Collision.cpp.i
+
+src/Collision.s: src/Collision.cpp.s
+
+.PHONY : src/Collision.s
+
+# target to generate assembly for a file
+src/Collision.cpp.s:
+	$(MAKE) -f CMakeFiles\Harmonic.dir\build.make CMakeFiles/Harmonic.dir/src/Collision.cpp.s
+.PHONY : src/Collision.cpp.s
+
 src/Color.obj: src/Color.cpp.obj
 
 .PHONY : src/Color.obj
@@ -310,6 +337,33 @@ src/Material.s: src/Material.cpp.s
 src/Material.cpp.s:
 	$(MAKE) -f CMakeFiles\Harmonic.dir\build.make CMakeFiles/Harmonic.dir/src/Material.cpp.s
 .PHONY : src/Material.cpp.s
+
+src/OBBTree.obj: src/OBBTree.cpp.obj
+
+.PHONY : src/OBBTree.obj
+
+# target to build an object file
+src/OBBTree.cpp.obj:
+	$(MAKE) -f CMakeFiles\Harmonic.dir\build.make CMakeFiles/Harmonic.dir/src/OBBTree.cpp.obj
+.PHONY : src/OBBTree.cpp.obj
+
+src/OBBTree.i: src/OBBTree.cpp.i
+
+.PHONY : src/OBBTree.i
+
+# target to preprocess a source file
+src/OBBTree.cpp.i:
+	$(MAKE) -f CMakeFiles\Harmonic.dir\build.make CMakeFiles/Harmonic.dir/src/OBBTree.cpp.i
+.PHONY : src/OBBTree.cpp.i
+
+src/OBBTree.s: src/OBBTree.cpp.s
+
+.PHONY : src/OBBTree.s
+
+# target to generate assembly for a file
+src/OBBTree.cpp.s:
+	$(MAKE) -f CMakeFiles\Harmonic.dir\build.make CMakeFiles/Harmonic.dir/src/OBBTree.cpp.s
+.PHONY : src/OBBTree.cpp.s
 
 src/Object.obj: src/Object.cpp.obj
 
@@ -572,6 +626,9 @@ help:
 	@echo ... src/Canvas.obj
 	@echo ... src/Canvas.i
 	@echo ... src/Canvas.s
+	@echo ... src/Collision.obj
+	@echo ... src/Collision.i
+	@echo ... src/Collision.s
 	@echo ... src/Color.obj
 	@echo ... src/Color.i
 	@echo ... src/Color.s
@@ -584,6 +641,9 @@ help:
 	@echo ... src/Material.obj
 	@echo ... src/Material.i
 	@echo ... src/Material.s
+	@echo ... src/OBBTree.obj
+	@echo ... src/OBBTree.i
+	@echo ... src/OBBTree.s
 	@echo ... src/Object.obj
 	@echo ... src/Object.i
 	@echo ... src/Object.s

@@ -24,6 +24,32 @@ PhysicsObject::~PhysicsObject() {
 }
 
 Collision* PhysicsObject::updateCollisions(PhysicsObject *otherObject) {
+	if(obbTree->isAABB && otherObject->obbTree->isAABB) {
+		auto min1 = obbTree->getMins();
+		auto min2 = otherObject->obbTree->getMins();
+		auto max1 = obbTree->getMaxes();
+		auto max2 = otherObject->obbTree->getMaxes();
+		if((min1.x>min2.x && min1.x<max2.x)
+				|| (max1.x>min2.x && max1.x<max2.x)
+				|| (min1.x<min2.x && max1.x>max2.x)
+				|| (min1.x>min2.x && max1.x<max2.x)) {
+			if((min1.y>min2.y && min1.y<max2.y)
+			   || (max1.y>min2.y && max1.y<max2.y)
+			   || (min1.y<min2.y && max1.y>max2.y)
+			   || (min1.y>min2.y && max1.y<max2.y)) {
+				if((min1.z>min2.z && min1.z<max2.z)
+				   || (max1.z>min2.z && max1.z<max2.z)
+				   || (min1.z<min2.z && max1.z>max2.z)
+				   || (min1.z>min2.z && max1.z<max2.z)) {
+					colliding = true;
+					return new Collision(this, otherObject);
+				}
+			}
+		}
+		colliding = false;
+		return nullptr;
+	}
+
 	//TODO: change otherObject name to be less terrible
 	//Get all 15 axis of separation
 	//TODO: Make this an array for conservation
@@ -44,40 +70,47 @@ Collision* PhysicsObject::updateCollisions(PhysicsObject *otherObject) {
 	L.push_back(glm::cross(obbTree->getTrueAxis(2), otherObject->obbTree->getTrueAxis(1)));
 	L.push_back(glm::cross(obbTree->getTrueAxis(2), otherObject->obbTree->getTrueAxis(2)));
 
-	glm::vec3 A = obbTree->getCenter();
-	glm::vec3 B = otherObject->obbTree->getCenter();
+	/*std::cout << "L: \n";
+	for (auto i: L) {
+		for(auto j: i) { std::cout << j << ' '; }
+		std::cout << "\n";
+	}*/
+
+	OBBTree* A = obbTree;
+	OBBTree* B = otherObject->obbTree;
 	//Half dimensions
 	size_t index_max_a=0, index_max_b=0;
-	glm::vec3 a = B - this->obbTree->getExtrema(0);
-	glm::vec3 b = A - otherObject->obbTree->getExtrema(0);
+	glm::vec3 a = glm::abs(B->getCenter() - A->getExtrema(0));
+	glm::vec3 b = glm::abs(A->getCenter() - B->getExtrema(0));
 	for (size_t j = 1; j < 8; ++j) {
-		if(glm::min(a, glm::abs(B - this->obbTree->getExtrema(j))) != a) {
+		if(glm::min(a, glm::abs(B->getCenter() - A->getExtrema(j))) != a) {
 			index_max_a = j;
 		}
-		if(glm::min(b, glm::abs(A - otherObject->obbTree->getExtrema(j))) != b) {
+		if(glm::min(b, glm::abs(A->getCenter() - B->getExtrema(j))) != b) {
 			index_max_b = j;
 		}
-		a = glm::min(a, glm::abs(B - this->obbTree->getExtrema(j)));
-		b = glm::min(b, glm::abs(A - otherObject->obbTree->getExtrema(j)));
+		a = glm::min(a, glm::abs(B->getCenter() - A->getExtrema(j)));
+		b = glm::min(b, glm::abs(A->getCenter() - B->getExtrema(j)));
 	}
-	a = glm::abs(A - this->obbTree->getExtrema(index_max_a));
-	b = glm::abs(B - otherObject->obbTree->getExtrema(index_max_b));
+	a = glm::abs(A->getCenter() - A->getExtrema(index_max_a));
+	b = glm::abs(B->getCenter() - B->getExtrema(index_max_b));
 
 	//Initialize radii
 	//glm::fvec3 r_a = glm::vec3(0);
 	//glm::fvec3 r_b = glm::vec3(0);
 	float r_a, r_b;
 	//TODO vvv ake sure the signs on this are ok vvv
-	glm::vec3 T = B - A;
+	glm::vec3 T = glm::abs(B->getCenter() - A->getCenter());
 	bool disjoint = true;
 	float radii=0 , distance=0;  //debugging variables
 
-	for (int i = 0; i < 15; ++i) {
+	for(auto axis : L) {
 		//Find r_a and r_b
+		//TODO: should these have to be abs?
 		//TODO: figure out how to get rid of these pseudo errors
-		r_a = glm::length(glm::dot(a, L[i]));
-		r_b = glm::length(glm::dot(b, L[i]));
-		distance = glm::length(glm::dot(T, L[i]));
+		r_a = glm::abs(glm::dot(a, axis)/glm::length(axis));
+		r_b = glm::abs(glm::dot(b, axis)/glm::length(axis));
+		distance = glm::abs(glm::dot(T, axis)/glm::length(axis));
 		radii = r_a + r_b;
 		//std::cout << "\n=============\ni: " << i << std::endl << "L: " << glm::to_string(L[i]) << std::endl << "Radii: " << radii << std::endl << "Distance: " << distance << std::endl;
 		if(distance > radii) {
@@ -125,7 +158,7 @@ void PhysicsObject::draw() {
 
 void PhysicsObject::setObjectData(const char *objPath) {
 	Object::setObjectData(objPath);
-	obbTree = new OBBTree(&vertices, &transform);
+	obbTree = new OBBTree(&vertices, &transform, true);
 }
 
 void PhysicsObject::updateForces(double deltaT, std::vector<glm::vec3> globalForces) {

@@ -28,6 +28,7 @@
 					<Add option="-D_CONSOLE"/>
 					<Add option="-D_CMAKE_CXX_FLAGS=-m64"/>
 					<Add directory="C:/Users/jpaavola/Documents/Code/Harmonic/include"/>
+					<Add directory="C:/Users/jpaavola/Documents/Code/Harmonic/include/Eigen"/>
 					<Add directory="E:/Programs/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/include/c++"/>
 					<Add directory="E:/Programs/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/include/c++/x86_64-w64-mingw32"/>
 					<Add directory="E:/Programs/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/include/c++/backward"/>
@@ -53,6 +54,7 @@
 					<Add option="-D_CONSOLE"/>
 					<Add option="-D_CMAKE_CXX_FLAGS=-m64"/>
 					<Add directory="C:/Users/jpaavola/Documents/Code/Harmonic/include"/>
+					<Add directory="C:/Users/jpaavola/Documents/Code/Harmonic/include/Eigen"/>
 					<Add directory="E:/Programs/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/include/c++"/>
 					<Add directory="E:/Programs/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/include/c++/x86_64-w64-mingw32"/>
 					<Add directory="E:/Programs/MinGW/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/include/c++/backward"/>
@@ -121,6 +123,12 @@
 		<Unit filename="C:/Users/jpaavola/Documents/Code/Harmonic/src/Canvas.h">
 			<Option target="Harmonic"/>
 		</Unit>
+		<Unit filename="C:/Users/jpaavola/Documents/Code/Harmonic/src/Collision.cpp">
+			<Option target="Harmonic"/>
+		</Unit>
+		<Unit filename="C:/Users/jpaavola/Documents/Code/Harmonic/src/Collision.h">
+			<Option target="Harmonic"/>
+		</Unit>
 		<Unit filename="C:/Users/jpaavola/Documents/Code/Harmonic/src/Color.cpp">
 			<Option target="Harmonic"/>
 		</Unit>
@@ -140,6 +148,12 @@
 			<Option target="Harmonic"/>
 		</Unit>
 		<Unit filename="C:/Users/jpaavola/Documents/Code/Harmonic/src/Material.h">
+			<Option target="Harmonic"/>
+		</Unit>
+		<Unit filename="C:/Users/jpaavola/Documents/Code/Harmonic/src/OBBTree.cpp">
+			<Option target="Harmonic"/>
+		</Unit>
+		<Unit filename="C:/Users/jpaavola/Documents/Code/Harmonic/src/OBBTree.h">
 			<Option target="Harmonic"/>
 		</Unit>
 		<Unit filename="C:/Users/jpaavola/Documents/Code/Harmonic/src/Object.cpp">
