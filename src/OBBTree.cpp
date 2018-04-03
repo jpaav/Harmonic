@@ -158,29 +158,17 @@ void OBBTree::findBounds(std::vector<glm::vec3> *vertices) {
 	float x_pos, y_pos, z_pos, x_b_pos, y_b_pos, z_b_pos;
 	float x_neg, y_neg, z_neg, x_b_neg, y_b_neg, z_b_neg;
 	float temp_bx, temp_by, temp_bz;
-	glm::vec3 vertex;
 	//std::cout << "i_hat: " << glm::to_string(i_hat) << "k_hat: " << glm::to_string(k_hat) << "j_hat: " << glm::to_string(j_hat) << std::endl;
 
 	//Initialization
-	vertex = (*vertices)[0];
-	temp_bx = glm::dot(basis[0], vertex)/glm::length(basis[0]);
-	temp_by = glm::dot(basis[1], vertex)/glm::length(basis[1]);
-	temp_bz = glm::dot(basis[2], vertex)/glm::length(basis[2]);
-	x_pos = vertex.x;
-	y_pos = vertex.y;
-	z_pos = vertex.z;
-	x_neg = vertex.x;
-	y_neg = vertex.y;
-	z_neg = vertex.z;
-	x_b_pos = temp_bx;
-	y_b_pos = temp_by;
-	z_b_pos = temp_bz;
-	x_b_neg = temp_bx;
-	y_b_neg = temp_by;
-	z_b_neg = temp_bz;
+	x_b_pos = std::numeric_limits<float>::min();
+	y_b_pos = std::numeric_limits<float>::min();
+	z_b_pos = std::numeric_limits<float>::min();
+	x_b_neg = std::numeric_limits<float>::max();
+	y_b_neg = std::numeric_limits<float>::max();
+	z_b_neg = std::numeric_limits<float>::max();
 	//Find extrema
-	for (int i=1; i < (*vertices).size(); i++) {
-		vertex = (*vertices)[i];
+	for (auto &vertex : *vertices) {
 		temp_bx = glm::dot(basis[0], vertex)/glm::length(basis[0]);
 		temp_by = glm::dot(basis[1], vertex)/glm::length(basis[1]);
 		temp_bz = glm::dot(basis[2], vertex)/glm::length(basis[2]);
@@ -287,9 +275,9 @@ glm::mat3 OBBTree::getBasis() {
 }
 
 glm::vec3 OBBTree::getMaxes() {
-	return extrema[6];
+	return glm::vec3(glm::translate(transform->position) * glm::toMat4(transform->rotation) * glm::scale(transform->scale) * glm::vec4(extrema[5], 1.0f));
 }
 
 glm::vec3 OBBTree::getMins() {
-	return extrema[1];
+	return glm::vec3(glm::translate(transform->position) * glm::toMat4(transform->rotation) * glm::scale(transform->scale) * glm::vec4(extrema[0], 1.0f));
 }

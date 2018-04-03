@@ -25,27 +25,28 @@ PhysicsObject::~PhysicsObject() {
 
 Collision* PhysicsObject::updateCollisions(PhysicsObject *otherObject) {
 	if(obbTree->isAABB && otherObject->obbTree->isAABB) {
-		auto min1 = obbTree->getMins();
-		auto min2 = otherObject->obbTree->getMins();
-		auto max1 = obbTree->getMaxes();
-		auto max2 = otherObject->obbTree->getMaxes();
-		if((min1.x>min2.x && min1.x<max2.x)
-				|| (max1.x>min2.x && max1.x<max2.x)
-				|| (min1.x<min2.x && max1.x>max2.x)
-				|| (min1.x>min2.x && max1.x<max2.x)) {
-			if((min1.y>min2.y && min1.y<max2.y)
-			   || (max1.y>min2.y && max1.y<max2.y)
-			   || (min1.y<min2.y && max1.y>max2.y)
-			   || (min1.y>min2.y && max1.y<max2.y)) {
-				if((min1.z>min2.z && min1.z<max2.z)
-				   || (max1.z>min2.z && max1.z<max2.z)
-				   || (min1.z<min2.z && max1.z>max2.z)
-				   || (min1.z>min2.z && max1.z<max2.z)) {
+		auto mins1 = obbTree->getMins();
+		auto mins2 = otherObject->obbTree->getMins();
+		auto maxs1 = obbTree->getMaxes();
+		auto maxs2 = otherObject->obbTree->getMaxes();
+		if((mins1.x>=mins2.x && mins1.x<=maxs2.x)
+				|| (maxs1.x>=mins2.x && maxs1.x<=maxs2.x)
+				|| (mins1.x<=mins2.x && maxs1.x>=maxs2.x)
+				|| (mins1.x>=mins2.x && maxs1.x<=maxs2.x)) {
+			if((mins1.y>=mins2.y && mins1.y<=maxs2.y)
+			   || (maxs1.y>=mins2.y && maxs1.y<=maxs2.y)
+			   || (mins1.y<=mins2.y && maxs1.y>=maxs2.y)
+			   || (mins1.y>=mins2.y && maxs1.y<=maxs2.y)) {
+				if((mins1.z>=mins2.z && mins1.z<=maxs2.z)
+				   || (maxs1.z>=mins2.z && maxs1.z<=maxs2.z)
+				   || (mins1.z<=mins2.z && maxs1.z>=maxs2.z)
+				   || (mins1.z>=mins2.z && maxs1.z<=maxs2.z)) {
 					colliding = true;
 					return new Collision(this, otherObject);
 				}
 			}
 		}
+
 		colliding = false;
 		return nullptr;
 	}
@@ -158,7 +159,7 @@ void PhysicsObject::draw() {
 
 void PhysicsObject::setObjectData(const char *objPath) {
 	Object::setObjectData(objPath);
-	obbTree = new OBBTree(&vertices, &transform, true);
+	obbTree = new OBBTree(&vertices, &transform, false);
 }
 
 void PhysicsObject::updateForces(double deltaT, std::vector<glm::vec3> globalForces) {
