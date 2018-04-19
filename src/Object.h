@@ -15,6 +15,7 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <vector>
+#include "GLFunctions.h"
 
 class Object {
 protected:
@@ -23,6 +24,7 @@ protected:
 	Material *m_mat;
 	GLuint vertexBuffer;
 	GLuint uvBuffer;
+	GLuint transformFeedbackBuffer;
 	int triCount;
 	Camera *m_cam;
 	//GLuint simpleShader;
@@ -46,6 +48,7 @@ public:
 	void setRotation(float x, float y, float z);
 	void setScale(float x, float y, float z);
 	void setScale(glm::vec3 xyz);
+	std::vector<glm::vec3> getVertices();
 
 	Material *getMaterial() const {
 		return m_mat;

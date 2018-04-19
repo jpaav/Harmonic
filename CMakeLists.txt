@@ -73,7 +73,7 @@ file(GLOB SRC_FILES
 # Add executable to build.
 add_executable(${PROJECT_NAME} 
    ${SRC_FILES}
-        src/Collision.cpp src/Collision.h)
+        src/Collision.cpp src/Collision.h src/PhysicsHelper.cpp src/PhysicsHelper.h)
 
 
 message(STATUS "Linking Libraries")

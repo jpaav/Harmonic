@@ -111,11 +111,11 @@ int main(int argc, char **argv) {
 
 	//Load shaders
 	GLuint shader = LoadShader("C:/Users/jpaavola/Documents/Code/Harmonic/src/shaders/simple_v.glsl",
-			"C:/Users/jpaavola/Documents/Code/Harmonic/src/shaders/simple_f.glsl");
+			"C:/Users/jpaavola/Documents/Code/Harmonic/src/shaders/simple_f.glsl", false);
 	GLuint diffuseShader = LoadShader("C:/Users/jpaavola/Documents/Code/Harmonic/src/shaders/VertexShader.glsl",
-		"C:/Users/jpaavola/Documents/Code/Harmonic/src/shaders/FragmentShader.glsl");
+		"C:/Users/jpaavola/Documents/Code/Harmonic/src/shaders/FragmentShader.glsl", true);
 	GLuint textShader = LoadShader("C:/Users/jpaavola/Documents/Code/Harmonic/src/shaders/text_v.glsl",
-		"C:/Users/jpaavola/Documents/Code/Harmonic/src/shaders/text_f.glsl");
+		"C:/Users/jpaavola/Documents/Code/Harmonic/src/shaders/text_f.glsl", false);
 
 
 	//Make a new Viewport object
@@ -210,7 +210,7 @@ int main(int argc, char **argv) {
 		infoCompString.clear();
 		//Text rendering
 		glfwGetCursorPos(window, &testx, &testy);
-		fpsString.append(std::to_string(currentFrame - lastFrame)).append("ms\n");
+		fpsString.append(std::to_string(1000*(currentFrame - lastFrame))).append("ms\n");
 		
 		//Combine strings
 		infoCompString.append(vendor).append(version).append(renderer).append(fpsString)

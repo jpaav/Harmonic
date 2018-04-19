@@ -31,5 +31,6 @@ public:
 	void addGlobalForce(glm::vec3 force);
 	PhysicsObject* addPhysicsObject(const char * materialName);
 	void updatePhysics();
+	void collide(Collision *collision);
 };
 

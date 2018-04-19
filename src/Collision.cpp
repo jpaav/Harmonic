@@ -4,7 +4,7 @@
 
 #include "Collision.h"
 
-Collision::Collision(Object *collider, Object *collidee) : collider(collider), collidee(collidee) {}
+Collision::Collision(Object *collider, Object *collidee, glm::vec3 intersection) : collider(collider), collidee(collidee), intersection(intersection) {}
 std::string Collision::toString() {
 	return std::string(collider->getName() + " collides with " + collidee->getName());
 }

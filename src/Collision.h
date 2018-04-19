@@ -12,8 +12,9 @@ class Collision {
 public:
 	Object *collider;
 	Object *collidee;
+	glm::vec3 intersection;
 
-	Collision(Object *collider, Object *collidee);
+	Collision(Object *collider, Object *collidee, glm::vec3 intersection);
 
 	std::string toString();
 };

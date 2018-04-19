@@ -1,5 +1,5 @@
 #include "PhysicsViewport.h"
-
+#include "PhysicsHelper.h"
 
 
 PhysicsViewport::PhysicsViewport(GLFWwindow *window, int width, int height, Camera *camera, GLuint shader) : Viewport(window, width, height, camera, shader)
@@ -47,21 +47,28 @@ void PhysicsViewport::updatePhysics()
 			physicsObjects.push_back((PhysicsObject *) object);
 		}
 	}
-	Collision *temp;
-	//TODO: Make sure this doesn't run when there's less than 2 objects
-	for (int i = 0; i < physicsObjects.size()-1; ++i) {
-		for (int j = i+1; j < physicsObjects.size(); ++j) {
-			temp = physicsObjects[j]->updateCollisions(physicsObjects[i]);
-			if(temp != nullptr) {
-				collisions.push_back(temp);
-			}
-		}
-	}
 	for(auto &physicsObject : physicsObjects) {
 		physicsObject->updateForces(*deltaTime, globalForces);
+	}
+	Collision *temp;
+	//TODO: Make sure this doesn't run when there's less than 2 objects
+	//TODO: do spatial build optimizations
+	for (int i = 0; i < physicsObjects.size()-1; ++i) {
+		for (int j = i+1; j < physicsObjects.size(); ++j) {
+			//temp = physicsObjects[j]->updateCollisions(physicsObjects[i]);
+			temp = PhysicsHelper::gjk_intersection(physicsObjects[j], physicsObjects[i]);
+			if(temp != nullptr) {
+				collisions.push_back(temp);
+				collide(temp);
+			}
+		}
 	}
 
 	simFrame++;
 }
 
 long PhysicsViewport::getSimFrame() const {	return simFrame; }
+
+void PhysicsViewport::collide(Collision *collision) {
+
+}

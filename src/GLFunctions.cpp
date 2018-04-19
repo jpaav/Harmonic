@@ -183,7 +183,7 @@ std::string readFile(const char *filePath) {
  * @param fragment_path
  * @return
  */
-GLuint LoadShader(const char *vertex_path, const char *fragment_path) {
+GLuint LoadShader(const char *vertex_path, const char *fragment_path, bool hasTransformFeedback) {
     GLuint vertShader = glCreateShader(GL_VERTEX_SHADER);
     GLuint fragShader = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -225,10 +225,22 @@ GLuint LoadShader(const char *vertex_path, const char *fragment_path) {
 	}
 		
 
-    std::cout << "Linking program" << std::endl;
+    std::cout << "Creating Program" << std::endl;
     GLuint program = glCreateProgram();
     glAttachShader(program, vertShader);
     glAttachShader(program, fragShader);
+	if(hasTransformFeedback) {
+		//Setup Transform Feedback
+		std::cout << "Setting Transform Feedback" << std::endl;
+		const char *varyings[] =
+			{
+				"pos"
+			};
+		glTransformFeedbackVaryings(program, 1, varyings, GL_INTERLEAVED_ATTRIBS);
+	}
+
+	//Link
+	std::cout << "Linking Program" << std::endl;
     glLinkProgram(program);
 
     glGetProgramiv(program, GL_LINK_STATUS, &result);
@@ -465,4 +477,14 @@ bool loadObj(const char* path, std::vector<glm::vec3> *out_vertices, std::vector
 		}
 	}
 	return true;
+}
+
+std::vector<glm::vec3> floatArrayToGLMVector(GLfloat *array, size_t length) {
+	std::vector<glm::vec3> vector;
+	//TODO: fix errors with this check vvv
+	//if(length % 3 != 0){ return NULL; }
+	for (int i = 0; i < length; i+=3) {
+		vector.emplace_back(array[i], array[i+1], array[i+2]);
+	}
+	return vector;
 }

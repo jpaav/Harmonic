@@ -24,33 +24,81 @@ PhysicsObject::~PhysicsObject() {
 }
 
 Collision* PhysicsObject::updateCollisions(PhysicsObject *otherObject) {
+	//Handle AABB if allowed
+	Collision *collision;
 	if(obbTree->isAABB && otherObject->obbTree->isAABB) {
-		auto mins1 = obbTree->getMins();
-		auto mins2 = otherObject->obbTree->getMins();
-		auto maxs1 = obbTree->getMaxes();
-		auto maxs2 = otherObject->obbTree->getMaxes();
-		if((mins1.x>=mins2.x && mins1.x<=maxs2.x)
-				|| (maxs1.x>=mins2.x && maxs1.x<=maxs2.x)
-				|| (mins1.x<=mins2.x && maxs1.x>=maxs2.x)
-				|| (mins1.x>=mins2.x && maxs1.x<=maxs2.x)) {
-			if((mins1.y>=mins2.y && mins1.y<=maxs2.y)
-			   || (maxs1.y>=mins2.y && maxs1.y<=maxs2.y)
-			   || (mins1.y<=mins2.y && maxs1.y>=maxs2.y)
-			   || (mins1.y>=mins2.y && maxs1.y<=maxs2.y)) {
-				if((mins1.z>=mins2.z && mins1.z<=maxs2.z)
-				   || (maxs1.z>=mins2.z && maxs1.z<=maxs2.z)
-				   || (mins1.z<=mins2.z && maxs1.z>=maxs2.z)
-				   || (mins1.z>=mins2.z && maxs1.z<=maxs2.z)) {
-					colliding = true;
-					return new Collision(this, otherObject);
-				}
-			}
+		collision = aabbCollisions(otherObject);
+		if(collision != nullptr) {
+			colliding = true;
+			return collision;
+		}else {
+			colliding = false;
+			return nullptr;
 		}
-
-		colliding = false;
+	}
+	//Handle OBBTree otherwise
+	else if(!obbTree->isAABB && !otherObject->obbTree->isAABB){
+		collision = sat(otherObject);
+		if(collision != nullptr) {
+			colliding = true;
+			return collision;
+		}else {
+			colliding = false;
+			return nullptr;
+		}
+	}
+	else {
+		std::cout << "These objects have different collision handlers which is not currently supported by this engine." << std::endl;
 		return nullptr;
 	}
 
+}
+
+void PhysicsObject::applyForce(double deltaT, glm::vec3 force)
+{
+	double p_x, p_y, p_z, v_x, v_y, v_z;
+
+	transform.acceleration.x = force.x / mass;
+	transform.acceleration.y = force.y / mass;
+	transform.acceleration.z = force.z / mass;
+
+	v_x = transform.velocity.x + (deltaT * transform.acceleration.x);
+	v_y = transform.velocity.y + (deltaT * transform.acceleration.y);
+	v_z = transform.velocity.z + (deltaT * transform.acceleration.z);
+
+	p_x = transform.position.x + (transform.velocity.x*deltaT) + (0.5*transform.acceleration.x*deltaT*deltaT);
+	p_y = transform.position.y + (transform.velocity.y*deltaT) + (0.5*transform.acceleration.y*deltaT*deltaT);
+	p_z = transform.position.z + (transform.velocity.z*deltaT) + (0.5*transform.acceleration.z*deltaT*deltaT);
+
+	transform.velocity = glm::vec3(v_x, v_y, v_z);
+	transform.position = glm::vec3(p_x, p_y, p_z);
+}
+
+void PhysicsObject::draw() {
+	Object::draw();
+
+	// Update and Draw AABB
+	//aabb.draw(infoShader, vertices, this->transform, this->m_cam);
+	obbTree->draw(shader, this->transform, this->m_cam);
+}
+
+void PhysicsObject::setObjectData(const char *objPath) {
+	Object::setObjectData(objPath);
+	obbTree = new OBBTree(&vertices, &transform, false);
+}
+
+void PhysicsObject::updateForces(double deltaT, std::vector<glm::vec3> globalForces) {
+	//Stop update if object doesn't move
+	if (isPinned) { return; }
+	//Combine global and local forces
+	std::vector<glm::vec3> forces;
+	forces.push_back(combineForces(std::move(globalForces)));
+	forces.push_back(combineForces(transform.localForces));
+	//Apply forces
+	applyForce(deltaT, combineForces(forces));
+}
+
+Collision *PhysicsObject::sat(PhysicsObject *otherObject) {
 	//TODO: change otherObject name to be less terrible
 	//Get all 15 axis of separation
 	//TODO: Make this an array for conservation
@@ -102,7 +150,6 @@ Collision* PhysicsObject::updateCollisions(PhysicsObject *otherObject) {
 	float r_a, r_b;
 	//TODO vvv ake sure the signs on this are ok vvv
 	glm::vec3 T = glm::abs(B->getCenter() - A->getCenter());
-	bool disjoint = true;
 	float radii=0 , distance=0;  //debugging variables
 
 	for(auto axis : L) {
@@ -115,63 +162,37 @@ Collision* PhysicsObject::updateCollisions(PhysicsObject *otherObject) {
 		radii = r_a + r_b;
 		//std::cout << "\n=============\ni: " << i << std::endl << "L: " << glm::to_string(L[i]) << std::endl << "Radii: " << radii << std::endl << "Distance: " << distance << std::endl;
 		if(distance > radii) {
-			disjoint = false;
-			break;
+			return nullptr;
 		}
 	}
-	if(!disjoint) {
-		colliding = true;
-		return new Collision(this, otherObject);
-	}else {
-		colliding = false;
-		return nullptr;
+	return new Collision(this, otherObject, glm::vec3());
+}
+
+Collision *PhysicsObject::aabbCollisions(PhysicsObject *otherObject) {
+	auto mins1 = obbTree->getMins();
+	auto mins2 = otherObject->obbTree->getMins();
+	auto maxs1 = obbTree->getMaxes();
+	auto maxs2 = otherObject->obbTree->getMaxes();
+	if((mins1.x>=mins2.x && mins1.x<=maxs2.x)
+	   || (maxs1.x>=mins2.x && maxs1.x<=maxs2.x)
+	   || (mins1.x<=mins2.x && maxs1.x>=maxs2.x)
+	   || (mins1.x>=mins2.x && maxs1.x<=maxs2.x)) {
+		if((mins1.y>=mins2.y && mins1.y<=maxs2.y)
+		   || (maxs1.y>=mins2.y && maxs1.y<=maxs2.y)
+		   || (mins1.y<=mins2.y && maxs1.y>=maxs2.y)
+		   || (mins1.y>=mins2.y && maxs1.y<=maxs2.y)) {
+			if((mins1.z>=mins2.z && mins1.z<=maxs2.z)
+			   || (maxs1.z>=mins2.z && maxs1.z<=maxs2.z)
+			   || (mins1.z<=mins2.z && maxs1.z>=maxs2.z)
+			   || (mins1.z>=mins2.z && maxs1.z<=maxs2.z)) {
+				return new Collision(this, otherObject, glm::vec3());
+			}
+		}
 	}
 
+	return nullptr;
 }
 
-void PhysicsObject::applyForce(double deltaT, glm::vec3 force)
-{
-	double p_x, p_y, p_z, v_x, v_y, v_z;
-
-	transform.acceleration.x = force.x / mass;
-	transform.acceleration.y = force.y / mass;
-	transform.acceleration.z = force.z / mass;
-
-	v_x = transform.velocity.x + (deltaT * transform.acceleration.x);
-	v_y = transform.velocity.y + (deltaT * transform.acceleration.y);
-	v_z = transform.velocity.z + (deltaT * transform.acceleration.z);
-
-	p_x = transform.position.x + (transform.velocity.x*deltaT) + (0.5*transform.acceleration.x*deltaT*deltaT);
-	p_y = transform.position.y + (transform.velocity.y*deltaT) + (0.5*transform.acceleration.y*deltaT*deltaT);
-	p_z = transform.position.z + (transform.velocity.z*deltaT) + (0.5*transform.acceleration.z*deltaT*deltaT);
-
-	transform.velocity = glm::vec3(v_x, v_y, v_z);
-	transform.position = glm::vec3(p_x, p_y, p_z);
-}
-
-void PhysicsObject::draw() {
-	Object::draw();
-
-	// Update and Draw AABB
-	//aabb.draw(infoShader, vertices, this->transform, this->m_cam);
-	obbTree->draw(shader, this->transform, this->m_cam);
-}
-
-void PhysicsObject::setObjectData(const char *objPath) {
-	Object::setObjectData(objPath);
-	obbTree = new OBBTree(&vertices, &transform, false);
-}
-
-void PhysicsObject::updateForces(double deltaT, std::vector<glm::vec3> globalForces) {
-	//Stop update if object doesn't move
-	if (isPinned) { return; }
-	//Combine global and local forces
-	std::vector<glm::vec3> forces;
-	forces.push_back(combineForces(std::move(globalForces)));
-	forces.push_back(combineForces(transform.localForces));
-	//Apply forces
-	applyForce(deltaT, combineForces(forces));
-}
 
 
 

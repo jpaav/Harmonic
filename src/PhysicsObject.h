@@ -77,6 +77,8 @@ public:
 	}
 	void toggleDrawCenter()  { drawCenter = !drawCenter;  }
 	void toggleDrawBBBasis() { drawBBBasis = !drawBBBasis;}
+	Collision * sat(PhysicsObject *otherObject);
+	Collision * aabbCollisions(PhysicsObject *otherObject);
 private:
 	float mass;
 	AABB aabb;

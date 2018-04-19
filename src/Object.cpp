@@ -62,6 +62,10 @@ Object::Object(const char* objPath, Camera* camera, Material *material) {
 	vertexBuffer = vb;
 	glBindBuffer(GL_ARRAY_BUFFER, vb);
 	setObjectData(objPath);
+	GLuint tfb;
+	glGenBuffers(1, &tfb);
+	transformFeedbackBuffer = tfb;
+	glBindBuffer(GL_TRANSFORM_FEEDBACK, tfb);
 }
 Object::Object(Camera* camera, Material *material){
 	m_cam = camera;
@@ -75,11 +79,16 @@ Object::Object(Camera* camera, Material *material){
 	glGenBuffers(1, &vb);
 	vertexBuffer = vb;					//Necessary?
 	glBindBuffer(GL_ARRAY_BUFFER, vb);	//Necessary?
+	GLuint tfb;
+	glGenBuffers(1, &tfb);
+	transformFeedbackBuffer = tfb;
+	glBindBuffer(GL_TRANSFORM_FEEDBACK, tfb);
 }
 
 Object::~Object() {
 	glDeleteBuffers(1, &vertexBuffer);
 	glDeleteBuffers(1, &uvBuffer);
+	glDeleteBuffers(1, &transformFeedbackBuffer);
 }
 
 void Object::setObjectData(const char* objPath){
@@ -91,6 +100,10 @@ void Object::setObjectData(const char* objPath){
 
 	glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
 	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), uvs.data(), GL_STATIC_DRAW);
+
+	glGenBuffers(1, &transformFeedbackBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, transformFeedbackBuffer);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size(), nullptr, GL_STATIC_READ);
 
 	triCount = (int)(vertices.size());
 }
@@ -142,7 +155,7 @@ void Object::draw(){	//CHECK WHETHER OBJECT USES UVS TO SAVE RESOURCES
 	//Add Vertex Position Attribute
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glVertexAttribPointer(
-		0,			//Attribute 0. must match shader layout
+		0,			//Attribute 0.
 		3,			//size
 		GL_FLOAT,	//type
 		GL_FALSE,	//normalized?
@@ -161,7 +174,20 @@ void Object::draw(){	//CHECK WHETHER OBJECT USES UVS TO SAVE RESOURCES
 		0,			// stride
 		(void*)0	// array buffer offset
 	);
-	glDrawArrays(GL_TRIANGLES, 0, triCount); // Starting from vertex 0; 3 vertices total -> 1 triangle
+
+	//Draw
+	glDrawArrays(GL_TRIANGLES, 0, triCount);
+
+	//Get World Space positions for vertices via Transform Feedback
+	glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, transformFeedbackBuffer);
+	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, transformFeedbackBuffer);
+	glBeginTransformFeedback(GL_POINTS);
+	glEnable(GL_RASTERIZER_DISCARD);
+	glDrawArrays(GL_POINTS, 0, triCount*3);
+	glDisable(GL_RASTERIZER_DISCARD);
+	glEndTransformFeedback();
+
+	//Disable Vertex Attrib Arrays
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 }
@@ -181,6 +207,7 @@ void Object::drawEdges(){
 	//Send MVP to shader in uniform variable
 	glUniformMatrix4fv(MatrixLoc, 1, GL_FALSE, &MVPmatrix[0][0]);
 
+
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glEnableVertexAttribArray(0);
@@ -194,6 +221,7 @@ void Object::drawEdges(){
 		0,			//stride
 		(void*)0	//array buffer offset
 	);
+
 
 	//Add UV Attribute
 	glEnableVertexAttribArray(1);
@@ -209,4 +237,15 @@ void Object::drawEdges(){
 	glDrawArrays(GL_TRIANGLES, 0, triCount); // Starting from vertex 0; 3 vertices total -> 1 triangle
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+}
+
+std::vector<glm::vec3> Object::getVertices() {
+	auto start = glfwGetTime();
+	size_t length = vertices.size()*3;
+	GLfloat worldSpaceVertices[length];
+	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, transformFeedbackBuffer);
+	glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(worldSpaceVertices), worldSpaceVertices);
+	auto end = glfwGetTime();
+	std::cout << "Object::getVertices() took " << 1000*(end-start) << "ms\n";
+	return floatArrayToGLMVector(worldSpaceVertices, length);
 }
