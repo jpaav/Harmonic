@@ -234,7 +234,7 @@ GLuint LoadShader(const char *vertex_path, const char *fragment_path, bool hasTr
 		std::cout << "Setting Transform Feedback" << std::endl;
 		const char *varyings[] =
 			{
-				"pos"
+				"outPosition"
 			};
 		glTransformFeedbackVaryings(program, 1, varyings, GL_INTERLEAVED_ATTRIBS);
 	}

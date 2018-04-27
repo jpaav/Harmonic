@@ -56,7 +56,7 @@ void PhysicsViewport::updatePhysics()
 	for (int i = 0; i < physicsObjects.size()-1; ++i) {
 		for (int j = i+1; j < physicsObjects.size(); ++j) {
 			//temp = physicsObjects[j]->updateCollisions(physicsObjects[i]);
-			temp = PhysicsHelper::gjk_intersection(physicsObjects[j], physicsObjects[i]);
+			temp = PhysicsHelper::gjk_intersection(physicsObjects[j], physicsObjects[i], window, false);
 			if(temp != nullptr) {
 				collisions.push_back(temp);
 				collide(temp);

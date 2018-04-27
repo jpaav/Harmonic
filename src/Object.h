@@ -30,6 +30,7 @@ protected:
 	//GLuint simpleShader;
 	Transform transform;
 	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec3> vertices_worldspace;
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> normals;
 	std::vector<glm::vec3> lines;
@@ -48,7 +49,7 @@ public:
 	void setRotation(float x, float y, float z);
 	void setScale(float x, float y, float z);
 	void setScale(glm::vec3 xyz);
-	std::vector<glm::vec3> getVertices();
+	std::vector<glm::vec3> & getVertices();
 
 	Material *getMaterial() const {
 		return m_mat;
@@ -81,6 +82,11 @@ public:
 		}
 		allLines->insert(allLines->end(), lines.begin(), lines.end());
 	}
+
+	void addLine(glm::vec3 a, glm::vec3 b);
+	void addTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c);
+	void addTetrahedron(glm::vec3 a, glm::vec3 b, glm::vec3 c, glm::vec3 d);
+	void addPoint(glm::vec3 a);
 };
 
 #endif /* OBJECT_H_ */

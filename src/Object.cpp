@@ -101,9 +101,8 @@ void Object::setObjectData(const char* objPath){
 	glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
 	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), uvs.data(), GL_STATIC_DRAW);
 
-	glGenBuffers(1, &transformFeedbackBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, transformFeedbackBuffer);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size(), nullptr, GL_STATIC_READ);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), 0, GL_STATIC_READ);
 
 	triCount = (int)(vertices.size());
 }
@@ -180,7 +179,8 @@ void Object::draw(){	//CHECK WHETHER OBJECT USES UVS TO SAVE RESOURCES
 
 	//Get World Space positions for vertices via Transform Feedback
 	glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, transformFeedbackBuffer);
-	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, transformFeedbackBuffer);
+	//TODO: line below may be unnecessary
+	glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, transformFeedbackBuffer);
 	glBeginTransformFeedback(GL_POINTS);
 	glEnable(GL_RASTERIZER_DISCARD);
 	glDrawArrays(GL_POINTS, 0, triCount*3);
@@ -239,13 +239,59 @@ void Object::drawEdges(){
 	glDisableVertexAttribArray(1);
 }
 
-std::vector<glm::vec3> Object::getVertices() {
+std::vector<glm::vec3> & Object::getVertices() {
 	auto start = glfwGetTime();
-	size_t length = vertices.size()*3;
+	/*GPU acceleration
+	 size_t length = vertices.size()*3;
 	GLfloat worldSpaceVertices[length];
-	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, transformFeedbackBuffer);
+	glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, transformFeedbackBuffer);
 	glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(worldSpaceVertices), worldSpaceVertices);
+	//return worldSpaceVertices;
+	vertices_worldspace = floatArrayToGLMVector(worldSpaceVertices, length);*/
+	glm::mat4 LocationMatrix = glm::translate(transform.position);
+	glm::mat4 ScalingMatrix = glm::scale(transform.scale);
+	glm::mat4 RotationMatrix = glm::toMat4(transform.rotation);
+	glm::mat4 MVPmatrix = LocationMatrix * RotationMatrix * ScalingMatrix;
+	vertices_worldspace.clear();
+	for (auto vertice : vertices) {
+		vertices_worldspace.emplace_back(MVPmatrix * glm::vec4(vertice, 1));
+	}
 	auto end = glfwGetTime();
 	std::cout << "Object::getVertices() took " << 1000*(end-start) << "ms\n";
-	return floatArrayToGLMVector(worldSpaceVertices, length);
+	return vertices_worldspace;
+}
+
+void Object::addLine(glm::vec3 a, glm::vec3 b) {
+	lines.push_back(a);
+	lines.push_back(b);
+}
+
+void Object::addTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c) {
+	lines.push_back(a);
+	lines.push_back(b);
+	lines.push_back(a);
+	lines.push_back(c);
+	lines.push_back(c);
+	lines.push_back(b);
+}
+
+void Object::addTetrahedron(glm::vec3 a, glm::vec3 b, glm::vec3 c, glm::vec3 d) {
+	//Draw Base Triangle
+	lines.push_back(a);
+	lines.push_back(b);
+	lines.push_back(a);
+	lines.push_back(c);
+	lines.push_back(c);
+	lines.push_back(b);
+	//Draw Rest
+	lines.push_back(a);
+	lines.push_back(d);
+	lines.push_back(b);
+	lines.push_back(d);
+	lines.push_back(c);
+	lines.push_back(d);
+}
+
+void Object::addPoint(glm::vec3 a) {
+	points.push_back(a);
 }
