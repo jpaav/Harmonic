@@ -79,6 +79,7 @@ public:
 	void toggleDrawBBBasis() { drawBBBasis = !drawBBBasis;}
 	Collision * sat(PhysicsObject *otherObject);
 	Collision * aabbCollisions(PhysicsObject *otherObject);
+	static float dot(glm::vec3 a, glm::vec3 b);
 private:
 	float mass;
 	AABB aabb;

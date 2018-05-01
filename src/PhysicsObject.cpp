@@ -7,8 +7,6 @@
 
 #include "PhysicsObject.h"
 
-#include <utility>
-
 PhysicsObject::PhysicsObject(Camera *camera, Material *material, GLuint shader) : Object(camera, material){
 	mass = 1.0;
 	isPinned = false;
@@ -128,40 +126,43 @@ Collision *PhysicsObject::sat(PhysicsObject *otherObject) {
 	OBBTree* A = obbTree;
 	OBBTree* B = otherObject->obbTree;
 	//Half dimensions
-	size_t index_max_a=0, index_max_b=0;
-	glm::vec3 a = glm::abs(B->getCenter() - A->getExtrema(0));
-	glm::vec3 b = glm::abs(A->getCenter() - B->getExtrema(0));
+	size_t a_index_min=0, b_index_min=0;
+	float a_dist = glm::distance(B->getCenter(), A->getExtrema(0));
+	float b_dist = glm::distance(A->getCenter(), B->getExtrema(0));
 	for (size_t j = 1; j < 8; ++j) {
-		if(glm::min(a, glm::abs(B->getCenter() - A->getExtrema(j))) != a) {
-			index_max_a = j;
+		float a_dist_new = glm::distance(B->getCenter(), A->getExtrema(j));
+		float b_dist_new = glm::distance(A->getCenter(), B->getExtrema(j));
+		if(a_dist_new < a_dist) {
+			a_index_min = j;
+			a_dist = a_dist_new;
 		}
-		if(glm::min(b, glm::abs(A->getCenter() - B->getExtrema(j))) != b) {
-			index_max_b = j;
+		if(b_dist_new < b_dist) {
+			b_index_min = j;
+			b_dist = b_dist_new;
 		}
-		a = glm::min(a, glm::abs(B->getCenter() - A->getExtrema(j)));
-		b = glm::min(b, glm::abs(A->getCenter() - B->getExtrema(j)));
 	}
-	a = glm::abs(A->getCenter() - A->getExtrema(index_max_a));
-	b = glm::abs(B->getCenter() - B->getExtrema(index_max_b));
+	glm::vec3 a = A->getCenter() - A->getExtrema(a_index_min);
+	glm::vec3 b = B->getCenter() - B->getExtrema(b_index_min);
 
 	//Initialize radii
 	//glm::fvec3 r_a = glm::vec3(0);
 	//glm::fvec3 r_b = glm::vec3(0);
 	float r_a, r_b;
 	//TODO vvv ake sure the signs on this are ok vvv
-	glm::vec3 T = glm::abs(B->getCenter() - A->getCenter());
+	glm::vec3 T = B->getCenter() - A->getCenter();
 	float radii=0 , distance=0;  //debugging variables
 
 	for(auto axis : L) {
 		//Find r_a and r_b
 		//TODO: should these have to be abs?
 		//TODO: figure out how to get rid of these pseudo errors
-		r_a = glm::abs(glm::dot(a, axis)/glm::length(axis));
-		r_b = glm::abs(glm::dot(b, axis)/glm::length(axis));
-		distance = glm::abs(glm::dot(T, axis)/glm::length(axis));
-		radii = r_a + r_b;
+		//r_a = glm::abs(glm::dot(a, axis)/glm::length(axis));
+		//r_b = glm::abs(glm::dot(b, axis)/glm::length(axis));
+		r_a = glm::abs(dot(a, axis));
+		r_b = glm::abs(dot(b, axis));
+		distance = glm::abs(dot(T, axis));
 		//std::cout << "\n=============\ni: " << i << std::endl << "L: " << glm::to_string(L[i]) << std::endl << "Radii: " << radii << std::endl << "Distance: " << distance << std::endl;
-		if(distance > radii) {
+		if(distance > r_a + r_b) {
 			return nullptr;
 		}
 	}
@@ -191,6 +192,10 @@ Collision *PhysicsObject::aabbCollisions(PhysicsObject *otherObject) {
 	}
 
 	return nullptr;
+}
+
+float PhysicsObject::dot(glm::vec3 a, glm::vec3 b) {
+	return a.x*b.x + a.y*b.y + a.z*b.z;
 }
 
 

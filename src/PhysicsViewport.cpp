@@ -1,5 +1,4 @@
 #include "PhysicsViewport.h"
-#include "PhysicsHelper.h"
 
 
 PhysicsViewport::PhysicsViewport(GLFWwindow *window, int width, int height, Camera *camera, GLuint shader) : Viewport(window, width, height, camera, shader)
@@ -55,8 +54,8 @@ void PhysicsViewport::updatePhysics()
 	//TODO: do spatial build optimizations
 	for (int i = 0; i < physicsObjects.size()-1; ++i) {
 		for (int j = i+1; j < physicsObjects.size(); ++j) {
-			//temp = physicsObjects[j]->updateCollisions(physicsObjects[i]);
-			temp = PhysicsHelper::gjk_intersection(physicsObjects[j], physicsObjects[i], window, false);
+			temp = physicsObjects[j]->updateCollisions(physicsObjects[i]);
+			//temp = PhysicsHelper::gjk_intersection(physicsObjects[j], physicsObjects[i], window, false);
 			if(temp != nullptr) {
 				collisions.push_back(temp);
 				collide(temp);
