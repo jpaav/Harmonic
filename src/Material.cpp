@@ -21,6 +21,7 @@ Material::Material(GLuint shader, const char* name)
 	texture = NULL;
 	this->name = name;
 	color = Color();
+	shininess = 0.9f;
 }
 
 Material::~Material() {

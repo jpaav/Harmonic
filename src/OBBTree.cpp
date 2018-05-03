@@ -113,15 +113,18 @@ void OBBTree::draw(GLuint shader, Transform objTransform, Camera *camera){
 	//glm::mat4 LocationMatrix = glm::translate();
 	//glm::mat4 ScalingMatrix = glm::scale();
 	//glm::mat4 RotationMatrix = glm::mat4(eigenVectors);
-	glm::mat4 MVPmatrix = camera->dynamicCameraMatrix() * LocationMatrix * ScalingMatrix * RotationMatrix; //Use the rotation tutorial to learn change of basis
+	glm::mat4 viewProjMatrix = camera->dynamicCameraMatrix();
+	glm::mat4 modelMatrix = LocationMatrix * RotationMatrix * ScalingMatrix;
 
 	//Get a handle on the MVP/sampler uniforms
-	GLint MatrixLoc =	glGetUniformLocation(shader, "MVP");
+	GLint ModelMatLoc = glGetUniformLocation(shader, "model");
+	GLint ViewProjMatLoc = glGetUniformLocation(shader, "viewProj");
 
 	GLint ColorLoc = glGetUniformLocation(shader, "color");
 
 	//Send MVP to shader in uniform variable
-	glUniformMatrix4fv(MatrixLoc, 1, GL_FALSE, glm::value_ptr(MVPmatrix));
+	glUniformMatrix4fv(ModelMatLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+	glUniformMatrix4fv(ViewProjMatLoc, 1, GL_FALSE, glm::value_ptr(viewProjMatrix));
 
 	glUniform3fv(ColorLoc, 1, glm::value_ptr(glm::vec3(1.0f, 1.0f, 1.0f)));
 

@@ -142,8 +142,8 @@ int main(int argc, char **argv) {
 
 	//Test Ico//
 	const char *defaultMatName = "default";
-	auto defaultMat = vp->addMaterial(shader, defaultMatName);
-	defaultMat->setColor(Color(0.8,0.8,0.8));
+	auto defaultMat = vp->addMaterial(diffuseShader, defaultMatName);
+	defaultMat->setColor(Color(1.0,0.3,0.3));
 	PhysicsObject* ico = vp->addPhysicsObject(defaultMatName);
 	ico->setObjectData("C:/Users/jpaavola/Documents/Code/Harmonic/src/objs/IcoSphere.obj");
 	ico->setLocation(0, -1, 0);

@@ -24,6 +24,7 @@ protected:
 	Material *m_mat;
 	GLuint vertexBuffer;
 	GLuint uvBuffer;
+	GLuint normalBuffer;
 	GLuint transformFeedbackBuffer;
 	int triCount;
 	Camera *m_cam;

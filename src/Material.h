@@ -17,6 +17,7 @@ private:
 	GLuint shader;
 	GLuint texture;
 	Color color;
+	GLfloat shininess;
 	const char* name;
 public:
 	Material(GLuint shader, const char* name);
@@ -35,6 +36,18 @@ public:
 
 	void setColor(const Color &color) {
 		Material::color = color;
+	}
+
+	GLfloat getShininess() const {
+		return shininess;
+	}
+
+	GLfloat * getShininessPtr() {
+		return &shininess;
+	}
+
+	void setShininess(GLfloat shininess) {
+		Material::shininess = shininess;
 	}
 };
 

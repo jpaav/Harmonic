@@ -66,6 +66,10 @@ Object::Object(const char* objPath, Camera* camera, Material *material) {
 	glGenBuffers(1, &tfb);
 	transformFeedbackBuffer = tfb;
 	glBindBuffer(GL_TRANSFORM_FEEDBACK, tfb);
+	GLuint nb;
+	glGenBuffers(1, &nb);
+	normalBuffer = nb;
+	glBindBuffer(GL_ARRAY_BUFFER, nb);
 }
 Object::Object(Camera* camera, Material *material){
 	m_cam = camera;
@@ -83,6 +87,10 @@ Object::Object(Camera* camera, Material *material){
 	glGenBuffers(1, &tfb);
 	transformFeedbackBuffer = tfb;
 	glBindBuffer(GL_TRANSFORM_FEEDBACK, tfb);
+	GLuint nb;
+	glGenBuffers(1, &nb);
+	normalBuffer = nb;
+	glBindBuffer(GL_ARRAY_BUFFER, nb);
 }
 
 Object::~Object() {
@@ -103,6 +111,9 @@ void Object::setObjectData(const char* objPath){
 
 	glBindBuffer(GL_ARRAY_BUFFER, transformFeedbackBuffer);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), 0, GL_STATIC_READ);
+
+	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
 
 	triCount = (int)(vertices.size());
 }
@@ -131,24 +142,51 @@ void Object::draw(){	//CHECK WHETHER OBJECT USES UVS TO SAVE RESOURCES
 	glm::mat4 LocationMatrix = glm::translate(transform.position);
 	glm::mat4 ScalingMatrix = glm::scale(transform.scale);
 	glm::mat4 RotationMatrix = glm::toMat4(transform.rotation);
-	glm::mat4 MVPmatrix = m_cam->dynamicCameraMatrix() * LocationMatrix * RotationMatrix * ScalingMatrix;
+	glm::mat4 viewProjMatrix = m_cam->dynamicCameraMatrix();
+	glm::mat4 modelMatrix = LocationMatrix * RotationMatrix * ScalingMatrix;
 
 	//Get a handle on the MVP/sampler uniforms
-	GLuint MatrixLoc =	glGetUniformLocation(m_mat->getShader(), "MVP");
+	GLint ModelMatLoc = glGetUniformLocation(m_mat->getShader(), "model");
+	GLint ViewProjMatLoc = glGetUniformLocation(m_mat->getShader(), "viewProj");
+
+	//Handle textures
 	if(m_mat->getTexture() != NULL){
-		GLuint TextureLoc =	glGetUniformLocation(m_mat->getShader(), "myTextureSampler");
+		GLint TextureLoc =	glGetUniformLocation(m_mat->getShader(), "myTextureSampler");
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, m_mat->getTexture());
 		glUniform1i(TextureLoc, 0);
+		//Enable
+		GLint TextureEnabledLoc = glGetUniformLocation(m_mat->getShader(), "useTextures");
+		glUniform1i(TextureEnabledLoc, 1);
+	}else{
+		GLint TextureEnabledLoc = glGetUniformLocation(m_mat->getShader(), "useTextures");
+		glUniform1i(TextureEnabledLoc, 0);
 	}
 
-	GLint ColorLoc = glGetUniformLocation(m_mat->getShader(), "color");
+
+
+	GLint ColorLoc = glGetUniformLocation(m_mat->getShader(), "tint");
+	GLint ViewPosLoc = glGetUniformLocation(m_mat->getShader(), "viewPos");
+	GLint ShininessLoc = glGetUniformLocation(m_mat->getShader(), "shininess");
 
 	//Send MVP to shader in uniform variable
-	glUniformMatrix4fv(MatrixLoc, 1, GL_FALSE, &MVPmatrix[0][0]);
+	glUniformMatrix4fv(ModelMatLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+	glUniformMatrix4fv(ViewProjMatLoc, 1, GL_FALSE, glm::value_ptr(viewProjMatrix));
 
 	//Send Color to shader in uniform variable
-	glUniform3fv(ColorLoc, 1, glm::value_ptr(m_mat->getColor().getRGB()));
+	if(ColorLoc != -1){
+		glUniform3fv(ColorLoc, 1, glm::value_ptr(m_mat->getColor().getRGB()));
+	}
+
+	//Send View Position to shader in uniform variable
+	if(ViewPosLoc != -1) {
+		glUniform3fv(ViewPosLoc, 1, glm::value_ptr(m_cam->getPos()));
+	}
+
+	//Send Shininess to shader in uniform variable
+	if(ShininessLoc != -1) {
+		glUniform1f(ShininessLoc, m_mat->getShininess());
+	}
 
 	glEnableVertexAttribArray(0);
 	//Add Vertex Position Attribute
@@ -174,6 +212,18 @@ void Object::draw(){	//CHECK WHETHER OBJECT USES UVS TO SAVE RESOURCES
 		(void*)0	// array buffer offset
 	);
 
+	//Add Normal Attribute
+	glEnableVertexAttribArray(2);
+	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+	glVertexAttribPointer(
+			2, 			//Attribute 1.
+			3,			// size
+			GL_FLOAT,	// type
+			GL_FALSE,	// normalized?
+			0,			// stride
+			(void*)0	// array buffer offset
+	);
+
 	//Draw
 	glDrawArrays(GL_TRIANGLES, 0, triCount);
 
@@ -190,6 +240,7 @@ void Object::draw(){	//CHECK WHETHER OBJECT USES UVS TO SAVE RESOURCES
 	//Disable Vertex Attrib Arrays
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
 }
 
 void Object::drawEdges(){
