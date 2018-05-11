@@ -58,7 +58,7 @@ void PhysicsViewport::updatePhysics()
 			//temp = PhysicsHelper::gjk_intersection(physicsObjects[j], physicsObjects[i], window, false);
 			if(temp != nullptr) {
 				collisions.push_back(temp);
-				collide(temp);
+				//collisionResponse(temp);
 			}
 		}
 	}
@@ -68,6 +68,19 @@ void PhysicsViewport::updatePhysics()
 
 long PhysicsViewport::getSimFrame() const {	return simFrame; }
 
-void PhysicsViewport::collide(Collision *collision) {
-
+void PhysicsViewport::collisionResponse(Collision *collision) {
+	float e = 0.5f;
+	if(!collision->B->isPinned && collision->A->isPinned) {
+		//Move objects out of each other
+		collision->B->getTransform().translate(collision->intersection_A);
+		//Respond to collision
+		float j = glm::max(-(1+e) * PhysicsHelper::dot(collision->B->getTransform().velocity * collision->B->getMass(), collision->contact_n_A), 0.0f);
+		collision->B->getTransform().setVelocity(collision->B->getTransform().velocity + j * collision->contact_n_A);
+	}else if(collision->B->isPinned && !collision->A->isPinned){
+		//Move objects out of each other
+		collision->A->getTransform().translate(collision->intersection_A);
+		//Respond to collision
+		float j = glm::max(-(1+e) * PhysicsHelper::dot(collision->A->getTransform().velocity * collision->A->getMass(), collision->contact_n_A), 0.0f);
+		collision->A->getTransform().setVelocity(collision->A->getTransform().velocity + j * collision->contact_n_A);
+	}
 }

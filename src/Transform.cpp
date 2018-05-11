@@ -28,3 +28,7 @@ void Transform::print()
 		<< std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl
 		<< std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
 }
+
+void Transform::translate(glm::vec3 vector) {
+	position += vector;
+}

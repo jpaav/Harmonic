@@ -6,7 +6,6 @@ in vec3 normal;
 out vec4 color;
 uniform vec3 tint;
 uniform sampler2D myTextureSampler;
-
 uniform int useTextures;
 uniform vec3 viewPos;
 uniform float shininess;

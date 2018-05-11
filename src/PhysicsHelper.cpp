@@ -57,7 +57,7 @@ Collision* PhysicsHelper::gjk_intersection(PhysicsObject *A, PhysicsObject *B, G
 			);
 			std::cout << "PhysicsHelper::gjk_intersection() took " << end.count()-start.count() << "ms\n";
 			//TODO: Figure out how to get intersection information
-			return new Collision(A, B, glm::vec3());
+			return new Collision(A, B, glm::vec3(), glm::vec3(), glm::vec3(), glm::vec3());
 		}
 	}
 	return nullptr;
@@ -131,72 +131,41 @@ void PhysicsHelper::gjk_doSimplexTriangle(std::vector<glm::vec3> &simplex, glm::
 	glm::vec3 AB = B-A;
 	glm::vec3 AC = C-A;
 	glm::vec3 ABC = glm::cross(AB, AC);
-	if(SAME_DIR(glm::cross(ABC, AC), -A)) {
-		if(SAME_DIR(AC, -A)) {
-			std::cout << "CA is closest to origin in gjk_doSimplex() for the 3-simplex case." << std::endl;
-			//Return simplex of CA by removing B
-			simplex.clear();
-			simplex.push_back(C);
-			simplex.push_back(A);
-			dir = glm::cross(glm::cross(AC, -A), AC);
-		}
-		else {
-			if(SAME_DIR(AB, -A)) {
-				std::cout << "BA is closest to origin in gjk_doSimplex() for the 3-simplex case." << std::endl;
-				//Return simplex of BA
-				simplex.clear();
-				simplex.push_back(B);
-				simplex.push_back(A);
-				//Return normal of AB that points to AO
-				dir = glm::cross(glm::cross(AB, -A), AB);
-			}else {
-				std::cout << "A is closest to origin in gjk_doSimplex() for the 3-simplex case." << std::endl;
-				//Return simplex of A
-				simplex.clear();
-				simplex.push_back(A);
-				//Return AO
-				dir = -A;
-			}
-		}
+	if(SAME_DIR(AB, -A)) {
+		std::cout << "BA is closest to origin in gjk_doSimplex() for the 3-simplex case." << std::endl;
+		//Return simplex of BA
+		simplex.clear();
+		simplex.push_back(B);
+		simplex.push_back(A);
+		//Return normal of AB that points to AO
+		dir = glm::cross(glm::cross(AB, -A), AB);
+		return;
+	}
+	if(SAME_DIR(AC, -A)) {
+		std::cout << "CA is closest to origin in gjk_doSimplex() for the 3-simplex case." << std::endl;
+		//Return simplex of CA by removing B
+		simplex.clear();
+		simplex.push_back(C);
+		simplex.push_back(A);
+		dir = glm::cross(glm::cross(AC, -A), AC);
+		return;
+	}
+	if(SAME_DIR(ABC, -A)) {
+		std::cout << "CBA is closest to origin in gjk_doSimplex() for the 3-simplex case." << std::endl;
+		//Return same simplex
+		//Return "up" normal of triangle
+		dir = ABC;
+		return;
 	} else {
-		if(SAME_DIR(glm::cross(AB, ABC), -A)) {
-			if(SAME_DIR(AB, -A)) {
-				std::cout << "BA is closest to origin in gjk_doSimplex() for the 3-simplex case." << std::endl;
-				//Return simplex of AB
-				simplex.clear();
-				simplex.push_back(B);
-				simplex.push_back(A);
-				//Return normal of AB that points to AO
-				dir = glm::cross(glm::cross(AB, -A), AB);
-			}else {
-				std::cout << "A is closest to origin in gjk_doSimplex() for the 3-simplex case." << std::endl;
-				//Return simplex of A
-				simplex.clear();
-				simplex.push_back(A);
-				//Return AO
-				dir = -A;
-			}
-		} else {
-			if(SAME_DIR(ABC, -A)) {
-				std::cout << "CBA is closest to origin in gjk_doSimplex() for the 3-simplex case." << std::endl;
-				//Return CBA simplex
-				simplex.clear();
-				simplex.push_back(C);
-				simplex.push_back(B);
-				simplex.push_back(A);
-				//Return "up" normal of triangle
-				dir = ABC;
-			} else {
-				std::cout << "BCA is closest to origin in gjk_doSimplex() for the 3-simplex case." << std::endl;
-				//Return CBA simple
-				simplex.clear();
-				simplex.push_back(C);
-				simplex.push_back(B);
-				simplex.push_back(A);
-				//Return "down" normal of the triangle
-				dir = -ABC;
-			}
-		}
+		std::cout << "BCA is closest to origin in gjk_doSimplex() for the 3-simplex case." << std::endl;
+		//Return CBA simple
+		simplex.clear();
+		simplex.push_back(C);
+		simplex.push_back(B);
+		simplex.push_back(A);
+		//Return "down" normal of the triangle
+		dir = -ABC;
+		return;
 	}
 }
 

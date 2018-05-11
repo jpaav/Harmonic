@@ -20,7 +20,6 @@
 class Object {
 protected:
 	std::string name;
-protected:
 	Material *m_mat;
 	GLuint vertexBuffer;
 	GLuint uvBuffer;
@@ -71,6 +70,11 @@ public:
 	void setName(const char* &name) {
 		Object::name = std::string(name);
 	}
+
+	Transform &getTransform() {
+		return transform;
+	}
+
 
 	virtual void getPointsAndLines(std::vector<glm::vec3> *allLines) {
 		for(auto point : points) {

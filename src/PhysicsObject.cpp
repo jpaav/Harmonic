@@ -141,8 +141,8 @@ Collision *PhysicsObject::sat(PhysicsObject *otherObject) {
 			b_dist = b_dist_new;
 		}
 	}
-	glm::vec3 a = A->getCenter() - A->getExtrema(a_index_min);
-	glm::vec3 b = B->getCenter() - B->getExtrema(b_index_min);
+	glm::vec3 a = A->getExtrema(a_index_min) - A->getCenter();
+	glm::vec3 b = B->getExtrema(b_index_min) - B->getCenter();
 
 	//Initialize radii
 	//glm::fvec3 r_a = glm::vec3(0);
@@ -150,23 +150,59 @@ Collision *PhysicsObject::sat(PhysicsObject *otherObject) {
 	float r_a, r_b;
 	//TODO vvv ake sure the signs on this are ok vvv
 	glm::vec3 T = B->getCenter() - A->getCenter();
-	float radii=0 , distance=0;  //debugging variables
+	float distance=0;  //debugging variables
 
+	std::cout  << "\n=============\n";
 	for(auto axis : L) {
 		//Find r_a and r_b
-		//TODO: should these have to be abs?
-		//TODO: figure out how to get rid of these pseudo errors
-		//r_a = glm::abs(glm::dot(a, axis)/glm::length(axis));
-		//r_b = glm::abs(glm::dot(b, axis)/glm::length(axis));
-		r_a = glm::abs(dot(a, axis));
-		r_b = glm::abs(dot(b, axis));
-		distance = glm::abs(dot(T, axis));
-		//std::cout << "\n=============\ni: " << i << std::endl << "L: " << glm::to_string(L[i]) << std::endl << "Radii: " << radii << std::endl << "Distance: " << distance << std::endl;
+		r_a = abs(dot(a, axis));
+		r_b = abs(dot(b, axis));
+		distance = abs(dot(T, axis));
+		std::cout << std::endl << "L: " << glm::to_string(axis) << std::endl << "Radii: " << r_a + r_b << std::endl << "Distance: " << distance << std::endl;
 		if(distance > r_a + r_b) {
 			return nullptr;
 		}
 	}
-	return new Collision(this, otherObject, glm::vec3());
+	//B contact normal
+	glm::vec3 mins_B = B->getMins();
+	glm::vec3 maxes_B = B->getMaxes();
+	glm::vec3 contact_surface_B = glm::vec3(mins_B.x, 0,0);
+	if(glm::distance(contact_surface_B, a) > glm::distance(glm::vec3(0, mins_B.y ,0), a)){
+		contact_surface_B = glm::vec3(0, mins_B.y,0);
+	}
+	if(glm::distance(contact_surface_B, a) > glm::distance(glm::vec3(0, 0 ,mins_B.z), a)){
+		contact_surface_B = glm::vec3(0, 0, mins_B.z);
+	}
+	if(glm::distance(contact_surface_B, a) > glm::distance(glm::vec3(maxes_B.x, 0 , 0), a)){
+		contact_surface_B = glm::vec3(maxes_B.x, 0,0);
+	}
+	if(glm::distance(contact_surface_B, a) > glm::distance(glm::vec3(0, maxes_B.y, 0), a)){
+		contact_surface_B = glm::vec3(0, maxes_B.y, 0);
+	}
+	if(glm::distance(contact_surface_B, a) > glm::distance(glm::vec3(0, 0 , maxes_B.z), a)){
+		contact_surface_B = glm::vec3(0, 0, maxes_B.z);
+	}
+	//A contact normal
+	//todo replaces a with b below
+	glm::vec3 mins_A = A->getMins();
+	glm::vec3 maxes_A = A->getMaxes();
+	glm::vec3 contact_surface_A = glm::vec3(mins_A.x, 0,0);
+	if(glm::distance(contact_surface_A, b) > glm::distance(glm::vec3(0, mins_A.y ,0), b)){
+		contact_surface_A = glm::vec3(0, mins_A.y,0);
+	}
+	if(glm::distance(contact_surface_A, b) > glm::distance(glm::vec3(0, 0 ,mins_A.z), b)){
+		contact_surface_A = glm::vec3(0, 0, mins_A.z);
+	}
+	if(glm::distance(contact_surface_A, b) > glm::distance(glm::vec3(maxes_A.x, 0 , 0), b)){
+		contact_surface_A = glm::vec3(maxes_A.x, 0,0);
+	}
+	if(glm::distance(contact_surface_A, b) > glm::distance(glm::vec3(0, maxes_A.y, 0), b)){
+		contact_surface_A = glm::vec3(0, maxes_A.y, 0);
+	}
+	if(glm::distance(contact_surface_A, b) > glm::distance(glm::vec3(0, 0 , maxes_A.z), b)){
+		contact_surface_A = glm::vec3(0, 0, maxes_A.z);
+	}
+	return new Collision(this, otherObject, glm::normalize(contact_surface_B), glm::normalize(contact_surface_A), contact_surface_B - a, contact_surface_A - b);
 }
 
 Collision *PhysicsObject::aabbCollisions(PhysicsObject *otherObject) {
@@ -186,7 +222,7 @@ Collision *PhysicsObject::aabbCollisions(PhysicsObject *otherObject) {
 			   || (maxs1.z>=mins2.z && maxs1.z<=maxs2.z)
 			   || (mins1.z<=mins2.z && maxs1.z>=maxs2.z)
 			   || (mins1.z>=mins2.z && maxs1.z<=maxs2.z)) {
-				return new Collision(this, otherObject, glm::vec3());
+				return new Collision(this, otherObject, glm::vec3(), glm::vec3(), glm::vec3(), glm::vec3());
 			}
 		}
 	}

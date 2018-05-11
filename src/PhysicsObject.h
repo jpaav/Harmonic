@@ -18,7 +18,7 @@
 #include "AABB.h"
 #include "OBBTree.h"
 #include "Collision.h"
-
+class Collision;
 class PhysicsObject: public Object {
 public:
 	//Constructors and Destructors
@@ -80,6 +80,10 @@ public:
 	Collision * sat(PhysicsObject *otherObject);
 	Collision * aabbCollisions(PhysicsObject *otherObject);
 	static float dot(glm::vec3 a, glm::vec3 b);
+
+	const float &getMass() const {
+		return mass;
+	}
 private:
 	float mass;
 	AABB aabb;

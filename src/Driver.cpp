@@ -132,7 +132,7 @@ int main(int argc, char **argv) {
 	canMat->addTexture(*canDiffuse->getIdPtr());
 	PhysicsObject* can = vp->addPhysicsObject(canMatName);
 	can->setObjectData("C:/Users/jpaavola/Documents/Code/Harmonic/src/objs/can/tinCan.obj");
-	can->setLocation(0, 0, 0);
+	can->setLocation(0, 2, 0);
 	can->setRotation(0, 0, 0);
 	can->setName("Can");
 	//can->toggleDrawCenter();
