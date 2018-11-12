@@ -22,12 +22,14 @@ void loadTexture(const char*, GLuint*);
 void drawVertices(GLfloat[], GLuint, GLuint, int, int);
 void drawBox(GLfloat[], GLfloat[], Camera, Color);
 
-std::string readFile(const char *);
+std::string readFile(const char *filePath);
 
-GLuint LoadShader(const char *,const char *);
+GLuint LoadShader(const char *vertex_path,const char *fragment_path, bool hasTransformFeedback);
 
 void drawLine(GLfloat[], GLfloat[], float, Color);
 
 bool loadObj(const char*, std::vector<glm::vec3>*,std::vector<glm::vec2>*,std::vector<glm::vec3>*);
+
+std::vector<glm::vec3> floatArrayToGLMVector(GLfloat *array, size_t length);
 
 #endif /* GLFUNCTIONS_H_ */

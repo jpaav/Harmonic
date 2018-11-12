@@ -27,6 +27,7 @@
 #include "Canvas.h"
 #include "SOIL/SOIL.h"
 
+
 class Viewport {
 protected:
 	GLuint vertexArrayObj;
@@ -39,25 +40,26 @@ protected:
 	int width;
 	double *deltaTime;
 	std::vector<Object*> objects;
-	//float speed = 1.0f;		Slow down time???
+	std::vector<glm::vec3> lines;
+	GLuint lineVBO;
+	GLuint infoShader;
 
-	std::string readFile(const char*);
 public:
-	Viewport(GLFWwindow *window, int width, int height, Camera *camera);
-	Viewport(GLFWwindow *window, int width, int height);
-	~Viewport();
+	Viewport(GLFWwindow *window, int width, int height, Camera *camera, GLuint shader);
+	Viewport(GLFWwindow *window, int width, int height, GLuint shader);
+
+	virtual ~Viewport();
 	//Setup
-	Material* addMaterial(GLuint shader, char* name);
-	Material* getMaterial(char* name);
-	Texture* addTexture(char* path, char* name);
+	Material* addMaterial(GLuint shader, const char* name);
+	Material* getMaterial(const char* name);
+	Texture* addTexture(std::string path, std::string name);
 	Object* addObject(int materialIndex);
-	Object* addObject(char* materialName);
-	GLuint loadShader(const char* vertexPath, const char* fragmentPath);
+	Object* addObject(const char* materialName);
+	Object* getObject(const char* objectName);
 	//Running
 	void updateCameraPos();
 	void drawAll();
 	void drawAllEdges();
-
 	double* getDeltaTimePtr() const {
 		return deltaTime;
 	}
@@ -75,6 +77,8 @@ public:
 	Canvas* getCanvas() {
 		return canvas;
 	}
+
+	void drawPointsAndLines();
 };
 
 

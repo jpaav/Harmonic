@@ -6,7 +6,7 @@ Transform::Transform()
 {
 	position = glm::vec3(0.0f, 0.0f, 0.0f);
 	scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	rotation = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+	rotation = glm::quat(glm::vec3(0.0f, 0.0f, 0.0f));
 	acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 	velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 }
@@ -27,4 +27,8 @@ void Transform::print()
 		<< "Acceleration: (" << acceleration.x << "," << acceleration.y << "," << acceleration.z << ")" << std::endl
 		<< std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl
 		<< std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
+}
+
+void Transform::translate(glm::vec3 vector) {
+	position += vector;
 }

@@ -27,7 +27,7 @@ Camera::Camera(GLFWwindow *window) {
 	// vertical angle : 0, look at the horizon
 	verticalAngle = 0.0f;
 	//mouse speed
-	mouseSpeed = 0.005f;
+	mouseSpeed = 0.1f;
 	//playback speed
 	speed = 3.0f;
 	up = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -46,6 +46,7 @@ Camera::~Camera() {
 	// TODO Auto-generated destructor stub
 }
 void Camera::updatePos(){
+	//Extra check to make sure modes other than INPUT_MODE do not come through here
 	if(mode==TURNTABLE_MODE || mode==STATIC_MODE)
 	{
 		return;
@@ -53,8 +54,8 @@ void Camera::updatePos(){
 	float dt = *deltaTime;
 	glfwGetCursorPos(win, &xpos, &ypos);
 
-	horizontalAngle += mouseSpeed * dt * float(xpos );
-	verticalAngle   += mouseSpeed * dt * float(ypos );
+	horizontalAngle += mouseSpeed * dt * float(lastx-xpos);
+	verticalAngle   += mouseSpeed * dt * float(lasty-ypos);
 	glm::vec3 direction(
 		cos(verticalAngle) * sin(horizontalAngle),
 		sin(verticalAngle),
@@ -68,31 +69,35 @@ void Camera::updatePos(){
 	glm::vec3 newUp = glm::cross( newRight, direction );
 
 	// Move forward
-	if (glfwGetKey( win, GLFW_KEY_UP ) == GLFW_PRESS){
+	if (glfwGetKey( win, GLFW_KEY_W ) == GLFW_PRESS){
 		position += direction * dt * speed;
 	}
 	// Move backward
-	if (glfwGetKey( win, GLFW_KEY_DOWN ) == GLFW_PRESS){
+	if (glfwGetKey( win, GLFW_KEY_S ) == GLFW_PRESS){
 		position -= direction * dt * speed;
 	}
 	// Strafe right
-	if (glfwGetKey( win, GLFW_KEY_RIGHT ) == GLFW_PRESS){
+	if (glfwGetKey( win, GLFW_KEY_D ) == GLFW_PRESS){
 		position += newRight * dt * speed;
 	}
 	// Strafe left
-	if (glfwGetKey( win, GLFW_KEY_LEFT ) == GLFW_PRESS){
+	if (glfwGetKey( win, GLFW_KEY_A ) == GLFW_PRESS){
 		position -= newRight * dt * speed;
 	}
 	forward = direction;
 	up = newUp;
 	right = newRight;
+
+	lastx = xpos;
+	lasty = ypos;
 }
 glm::mat4 Camera::dynamicCameraMatrix()
 {
 	if(mode==TURNTABLE_MODE){	//Over-rides camera position and returns and turntable animation
 		GLfloat radius = 10.0f;
-		GLfloat camX = sin(glfwGetTime()) * radius;
-		GLfloat camZ = cos(glfwGetTime()) * radius;
+		//TODO: rewrite this cast more elegantly
+		GLfloat camX = static_cast<GLfloat>(sin(glfwGetTime()) * radius);
+		GLfloat camZ = static_cast<GLfloat>(cos(glfwGetTime()) * radius);
 		glm::mat4 view, projection;
 		view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
 		projection = glm::perspective(fov, (float)width/(float)height, nClip, fClip);
@@ -149,4 +154,17 @@ void Camera::rotateRight(float increment){
 	glm::vec3 newPos(focusVec);
 	position = newPos;
 	glm::lookAt(position,focusPoint,up);
+}
+
+void Camera::rotateViewMode() {
+	if (mode == STATIC_MODE) {
+		mode = TURNTABLE_MODE;
+	}
+	else if (mode == TURNTABLE_MODE) {
+		//TODO: initialize this to be looking at the same spot as the previous mode
+		mode = INPUT_MODE;
+	}
+	else if (mode == INPUT_MODE) {
+		mode = STATIC_MODE;
+	}
 }

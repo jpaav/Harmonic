@@ -9,10 +9,10 @@ class Texture
 {
 private:
 	GLuint id;
-	char* path;
-	char* name;
+	std::string path;
+	std::string name;
 public:
-	Texture(char* path, char* name);
+	Texture(std::string path, std::string name);
 	~Texture();
 
 	GLuint* getIdPtr();

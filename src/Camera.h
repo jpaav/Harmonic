@@ -40,9 +40,14 @@ public:
 	* Mouse position in screen space
 	*/
 	double xpos, ypos;
+	/**
+	 * Last mouse position, used to compare with current and get delta
+	 */
+	double lastx, lasty;
 
 	Camera();
-	Camera(GLFWwindow* window);
+
+	explicit Camera(GLFWwindow* window);
 	virtual ~Camera();
 
 	void updatePos();
@@ -64,7 +69,12 @@ public:
 	void moveDown(float increment);
 	void rotateLeft(float increment);
 	void rotateRight(float increment);
-
+	/**
+	 * Increases speed without allowing it below the threshold, 0.05 in this case.
+	 * @param increment the increment, positive or negative, that speed will be changed by
+	 */
+	void changeSpeed(float increment){ if(speed+increment > 0.05) {speed+=increment; } }
+	void rotateViewMode();
 };
 
 #endif /* CAMERA_H_ */

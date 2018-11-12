@@ -9,27 +9,45 @@
 #define MATERIAL_H_
 
 #include "GL/glew.h"
+#include "Color.h"
 
 
 class Material {
 private:
 	GLuint shader;
 	GLuint texture;
-	char* name;
+	Color color;
+	GLfloat shininess;
+	const char* name;
 public:
-	Material();
-	Material(GLuint shader, char* name);
+	Material(GLuint shader, const char* name);
 	virtual ~Material();
 	GLuint 	getShader(){ return shader; }
 	GLuint 	getTexture(){ return texture; }
 	void 	addTexture(GLuint tex);
 
-	char* getName() const {
+	const char* getName() const {
 		return name;
 	}
 
-	void setName(char* name) {
-		this->name = name;
+	const Color &getColor() const {
+		return color;
+	}
+
+	void setColor(const Color &color) {
+		Material::color = color;
+	}
+
+	GLfloat getShininess() const {
+		return shininess;
+	}
+
+	GLfloat * getShininessPtr() {
+		return &shininess;
+	}
+
+	void setShininess(GLfloat shininess) {
+		Material::shininess = shininess;
 	}
 };
 

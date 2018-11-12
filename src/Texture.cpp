@@ -1,18 +1,19 @@
 #include "Texture.h"
 
+#include <utility>
 
 
-Texture::Texture(char* path, char* name)
+Texture::Texture(std::string path, std::string name)
 {
 	this->id = 0;
 	this->path = path;
-	this->name = name;
-	id = SOIL_load_OGL_texture(path,
+	this->name = std::move(name);
+	id = SOIL_load_OGL_texture(path.c_str(),
 		SOIL_LOAD_AUTO,
 		SOIL_CREATE_NEW_ID,
 		SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_MULTIPLY_ALPHA
 	);
-	if (id == NULL) {
+	if (&id == nullptr) {
 		std::cout << "[Texture loader] \"" << path << "\" failed to load!\n";
 	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

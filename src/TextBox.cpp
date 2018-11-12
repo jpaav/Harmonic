@@ -1,10 +1,12 @@
 #include "TextBox.h"
 
+#include <utility>
 
 
-TextBox::TextBox(std::string name, int fontSize, float xPosition, float yPosition, float xScale, float yScale, float lineSpacing) 
-	: UIElement(name, UIElement::UIElementType::TEXT_BOX, xPosition, yPosition, xScale, yScale, lineSpacing)
+TextBox::TextBox(std::string name, int fontSize, float xPosition, float yPosition, float xScale, float yScale, float lineSpacing)
+	: UIElement(std::move(name), UIElement::UIElementType::TEXT_BOX, xPosition, yPosition, xScale, yScale, lineSpacing)
 {
+
 	this->text = "Temp";
 	
 	if (FT_Init_FreeType(&ft)) {
@@ -39,7 +41,7 @@ TextBox::~TextBox()
 
 int TextBox::render(GLuint shader)
 {
-	int num_chars = text.length();
+	auto num_chars = static_cast<int>(text.length());
 	float tempx = x;
 	float tempy = y;
 	float tempsx = sx;
@@ -52,15 +54,15 @@ int TextBox::render(GLuint shader)
 			continue;
 		}
 		glUseProgram(shader);
-		if (FT_Load_Char(face, text[i], FT_LOAD_DEFAULT)) {
+		if (FT_Load_Char(face, static_cast<FT_ULong>(text[i]), FT_LOAD_RENDER)) {
 			fprintf(stderr, "Could not load char");
 			continue;
 		}
-		if (FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL)) {
+		/*if (FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL)) {
 			fprintf(stderr, "Could not render glyph");
 			continue;
-		}
-			
+		}*/
+
 		glEnable(GL_TEXTURE_2D);
 	
 
@@ -116,7 +118,7 @@ int TextBox::render(GLuint shader)
 			GL_FLOAT,
 			GL_FALSE,
 			0,
-			NULL
+			nullptr
 		);
 		glBufferData(GL_ARRAY_BUFFER, sizeof box, box, GL_DYNAMIC_DRAW);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

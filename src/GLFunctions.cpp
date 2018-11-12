@@ -110,6 +110,7 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
 #include <vector>
 #include <string.h>
 #include <algorithm>
+#include <stdio.h>
 #include "Color.h"
 //GLM libraries
 #include <glm/glm.hpp>
@@ -182,7 +183,7 @@ std::string readFile(const char *filePath) {
  * @param fragment_path
  * @return
  */
-GLuint LoadShader(const char *vertex_path, const char *fragment_path) {
+GLuint LoadShader(const char *vertex_path, const char *fragment_path, bool hasTransformFeedback) {
     GLuint vertShader = glCreateShader(GL_VERTEX_SHADER);
     GLuint fragShader = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -224,10 +225,22 @@ GLuint LoadShader(const char *vertex_path, const char *fragment_path) {
 	}
 		
 
-    std::cout << "Linking program" << std::endl;
+    std::cout << "Creating Program" << std::endl;
     GLuint program = glCreateProgram();
     glAttachShader(program, vertShader);
     glAttachShader(program, fragShader);
+	if(hasTransformFeedback) {
+		//Setup Transform Feedback
+		std::cout << "Setting Transform Feedback" << std::endl;
+		const char *varyings[] =
+			{
+				"outPosition"
+			};
+		glTransformFeedbackVaryings(program, 1, varyings, GL_INTERLEAVED_ATTRIBS);
+	}
+
+	//Link
+	std::cout << "Linking Program" << std::endl;
     glLinkProgram(program);
 
     glGetProgramiv(program, GL_LINK_STATUS, &result);
@@ -367,7 +380,8 @@ void loadTexture(const char* path, GLuint* texture)
 		 SOIL_CREATE_NEW_ID,
 		 SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_MULTIPLY_ALPHA
 		);
-	if(*texture == NULL){
+	//TODO: This was *texture=NULL
+	if(!*texture){
 		printf("[Texture loader] \"%s\" failed to load!\n", path);
 	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -389,7 +403,7 @@ void loadTexture(const char* path, GLuint* texture)
 }
 
 bool loadObj(const char* path, std::vector<glm::vec3> *out_vertices, std::vector<glm::vec2> *out_uvs,
-		std::vector<glm::vec3> *out_normals){
+             std::vector<glm::vec3> *out_normals){
 	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
 	std::vector< glm::vec3 > temp_vertices;
 	std::vector< glm::vec2 > temp_uvs;
@@ -411,26 +425,26 @@ bool loadObj(const char* path, std::vector<glm::vec3> *out_vertices, std::vector
 		//Parse vertices
 		if(strcmp(lineHeader, "v")==0){
 			glm::vec3 vertex;
-			fscanf_s(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
+			fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
 			temp_vertices.push_back(vertex);
 		}//Parse UVs
 		else if(strcmp(lineHeader, "vt")==0){
 			glm::vec2 uv;
-			fscanf_s(file, "%f %f\n", &uv.x, &uv.y);
+			fscanf(file, "%f %f\n", &uv.x, &uv.y);
 			temp_uvs.push_back(uv);
 		}//Parse normals
 		else if ( strcmp( lineHeader, "vn" ) == 0 ){
-		    glm::vec3 normal;
-		    fscanf_s(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
-		    temp_normals.push_back(normal);
+			glm::vec3 normal;
+			fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
+			temp_normals.push_back(normal);
 		}//Parse faces
 		else if(strcmp(lineHeader, "f")==0){
 			std::string vertex1, vertex2, vertex3;
 			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
-			int matches = fscanf_s(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n",
-					&vertexIndex[0], &uvIndex[0], &normalIndex[0],
-					&vertexIndex[1], &uvIndex[1], &normalIndex[1],
-					&vertexIndex[2], &uvIndex[2], &normalIndex[2] );
+			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n",
+			                     &vertexIndex[0], &uvIndex[0], &normalIndex[0],
+			                     &vertexIndex[1], &uvIndex[1], &normalIndex[1],
+			                     &vertexIndex[2], &uvIndex[2], &normalIndex[2] );
 			if(matches!=9){
 				printf("Try other options, this parser is too basic for that kind of file!\n");
 				return false;
@@ -463,4 +477,14 @@ bool loadObj(const char* path, std::vector<glm::vec3> *out_vertices, std::vector
 		}
 	}
 	return true;
+}
+
+std::vector<glm::vec3> floatArrayToGLMVector(GLfloat *array, size_t length) {
+	std::vector<glm::vec3> vector;
+	//TODO: fix errors with this check vvv
+	//if(length % 3 != 0){ return NULL; }
+	for (int i = 0; i < length; i+=3) {
+		vector.emplace_back(array[i], array[i+1], array[i+2]);
+	}
+	return vector;
 }

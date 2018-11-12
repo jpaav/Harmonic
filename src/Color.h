@@ -7,6 +7,8 @@
 
 #ifndef COLOR_H_
 #define COLOR_H_
+
+#include <GL/glew.h>
 #include "glm/glm.hpp"
 
 class Color {
@@ -23,8 +25,16 @@ public:
 	float v(){return hsv.z;}
 
 	glm::vec3 RGBtoHSV(glm::vec3 rgb);
-	glm::vec3 getRGB(){return rgb;}
-	glm::vec3 getHSV(){return hsv;}
+
+	const glm::vec3 &getRGB() const {
+		return rgb;
+	}
+
+	void setRGB(const glm::vec3 &rgb) {
+		Color::rgb = rgb;
+	}
+
+	const glm::vec3 &getHSV() const {return hsv;}
 	glm::vec3 getNormalized();
 	void setRGB(float r, float b, float g);
 	void setHSV(float h, float s, float v);
